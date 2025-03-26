@@ -31,36 +31,77 @@ jobs:
         
     - name: Create build.xml
       run: |
-        echo "<?xml version='1.0' encoding='UTF-8'?>" > build.xml
-        echo "<project name='HCH_MOBILE_CONSENT_STG' default='help'>" >> build.xml
-        echo "  <property name='sdk.dir' value='$env:ANDROID_HOME'/>" >> build.xml
-        echo "  <property name='target' value='android-29'/>" >> build.xml
-        echo "  <property name='buildtools.version' value='25.0.3'/>" >> build.xml
-        echo "  <property name='key.store' value='keystore/umkey'/>" >> build.xml
-        echo "  <property name='key.alias' value='umkey'/>" >> build.xml
-        echo "  <property name='key.store.password' value='${{ secrets.KEY_STORE_PASSWORD }}'/>" >> build.xml
-        echo "  <property name='key.alias.password' value='${{ secrets.KEY_ALIAS_PASSWORD }}'/>" >> build.xml
-        echo "  <import file='$env:ANDROID_HOME/tools/ant/build.xml'/>" >> build.xml
-        echo "  <target name='help'>" >> build.xml
-        echo "    <echo>Available targets:</echo>" >> build.xml
-        echo "    <echo>  release: Build release APK</echo>" >> build.xml
-        echo "  </target>" >> build.xml
-        echo "  <target name='release'>" >> build.xml
-        echo "    <mkdir dir='bin'/>" >> build.xml
-        echo "    <javac srcdir='src' destdir='bin' includeantruntime='false'/>" >> build.xml
-        echo "    <dx input='bin' output='bin/classes.dex'/>" >> build.xml
-        echo "    <aapt executable='$env:ANDROID_HOME/build-tools/25.0.3/aapt.exe' command='package' versioncode='1' debug='false' manifest='AndroidManifest.xml' assets='assets' res='res' out='bin/resources.ap_'/>" >> build.xml
-        echo "    <apkbuilder outfile='bin/app-release.apk' signed='true' signedjar='bin/app-release-signed.apk' keystore='keystore/umkey' storepass='${{ secrets.KEY_STORE_PASSWORD }}' alias='umkey' keypass='${{ secrets.KEY_ALIAS_PASSWORD }}'>" >> build.xml
-        echo "      <sourcefolder path='bin/classes.dex'/>" >> build.xml
-        echo "      <sourcefolder path='bin/resources.ap_'/>" >> build.xml
-        echo "    </apkbuilder>" >> build.xml
-        echo "    <zipalign in='bin/app-release-signed.apk' out='bin/app-release.apk'/>" >> build.xml
-        echo "  </target>" >> build.xml
+        echo "<?xml version='1.0' encoding='UTF-8' standalone='no'?>" > build.xml
+        echo "<!-- WARNING: Eclipse auto-generated file." >> build.xml
+        echo "              Any modifications will be overwritten." >> build.xml
+        echo "              To include a user specific buildfile here, simply create one in the same" >> build.xml
+        echo "              directory with the processing instruction <?eclipse.ant.import?>" >> build.xml
+        echo "              as the first entry and export the buildfile again. -->" >> build.xml
+        echo "<project basedir='.' default='build' name='HCH_MOBILE_CONSENT_STG'>" >> build.xml
+        echo "    <property environment='env'/>" >> build.xml
+        echo "    <property name='debuglevel' value='source,lines,vars'/>" >> build.xml
+        echo "    <property name='target' value='1.7'/>" >> build.xml
+        echo "    <property name='source' value='1.7'/>" >> build.xml
+        echo "    <path id='Android 10.libraryclasspath'>" >> build.xml
+        echo "        <pathelement location='$env:ANDROID_HOME/platforms/android-29/android.jar'/>" >> build.xml
+        echo "    </path>" >> build.xml
+        echo "    <path id='Android Private Libraries.libraryclasspath'>" >> build.xml
+        echo "        <pathelement location='libs/json-simple-1.1.1 (1).jar'/>" >> build.xml
+        echo "        <pathelement location='libs/zxing_core.jar'/>" >> build.xml
+        echo "        <pathelement location='libs/icert.jar'/>" >> build.xml
+        echo "        <pathelement location='libs/android-support-v4.jar'/>" >> build.xml
+        echo "        <pathelement location='libs/ksoap2-android-assembly-2.4-jar-with-dependencies_PATCH_TIZIANA.jar'/>" >> build.xml
+        echo "        <pathelement location='libs/andorid_kmi.jar'/>" >> build.xml
+        echo "        <pathelement location='libs/java-json.jar'/>" >> build.xml
+        echo "        <pathelement location='libs/cordovalib.jar'/>" >> build.xml
+        echo "        <pathelement location='libs/gson-2.8.5.jar'/>" >> build.xml
+        echo "        <pathelement location='libs/CLIPe-FormToolkit_2.5.153_221125.jar'/>" >> build.xml
+        echo "        <pathelement location='libs/jackson-all-1.9.0.jar'/>" >> build.xml
+        echo "        <pathelement location='libs/SignKorea-Android.jar'/>" >> build.xml
+        echo "        <pathelement location='libs/mTranskeyCrypto.jar'/>" >> build.xml
+        echo "        <pathelement location='libs/commons-codec.jar'/>" >> build.xml
+        echo "        <pathelement location='libs/commons-net-3.5.jar'/>" >> build.xml
+        echo "    </path>" >> build.xml
+        echo "    <path id='HCH_MOBILE_CONSENT_STG.classpath'>" >> build.xml
+        echo "        <path refid='Android 10.libraryclasspath'/>" >> build.xml
+        echo "        <path refid='Android Private Libraries.libraryclasspath'/>" >> build.xml
+        echo "        <pathelement location='bin/classes'/>" >> build.xml
+        echo "    </path>" >> build.xml
+        echo "    <target name='init'>" >> build.xml
+        echo "        <mkdir dir='bin/classes'/>" >> build.xml
+        echo "        <copy includeemptydirs='false' todir='bin/classes'>" >> build.xml
+        echo "            <fileset dir='src'>" >> build.xml
+        echo "                <exclude name='**/*.launch'/>" >> build.xml
+        echo "                <exclude name='**/*.java'/>" >> build.xml
+        echo "            </fileset>" >> build.xml
+        echo "        </copy>" >> build.xml
+        echo "        <copy includeemptydirs='false' todir='bin/classes'>" >> build.xml
+        echo "            <fileset dir='gen'>" >> build.xml
+        echo "                <exclude name='**/*.launch'/>" >> build.xml
+        echo "                <exclude name='**/*.java'/>" >> build.xml
+        echo "            </fileset>" >> build.xml
+        echo "        </copy>" >> build.xml
+        echo "    </target>" >> build.xml
+        echo "    <target name='clean'>" >> build.xml
+        echo "        <delete dir='bin/classes'/>" >> build.xml
+        echo "    </target>" >> build.xml
+        echo "    <target depends='clean' name='cleanall'/>" >> build.xml
+        echo "    <target depends='build-subprojects,build-project' name='build'/>" >> build.xml
+        echo "    <target name='build-subprojects'/>" >> build.xml
+        echo "    <target depends='init' name='build-project'>" >> build.xml
+        echo "        <echo message='${ant.project.name}: ${ant.file}'/>" >> build.xml
+        echo "        <javac debug='true' debuglevel='${debuglevel}' destdir='bin/classes' includeantruntime='false' source='${source}' target='${target}'>" >> build.xml
+        echo "            <src path='src'/>" >> build.xml
+        echo "            <src path='gen'/>" >> build.xml
+        echo "            <classpath refid='HCH_MOBILE_CONSENT_STG.classpath'/>" >> build.xml
+        echo "        </javac>" >> build.xml
+        echo "    </target>" >> build.xml
+        echo "    <target description='Build all projects which reference this project. Useful to propagate changes.' name='build-refprojects'/>" >> build.xml
         echo "</project>" >> build.xml
         
     - name: Build with Ant
       run: |
-        cmd /c "ant release"
+        cmd /c "ant build"
       env:
         ANDROID_HOME: ${{ env.ANDROID_HOME }}
         ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
