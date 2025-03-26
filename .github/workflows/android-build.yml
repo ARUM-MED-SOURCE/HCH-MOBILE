@@ -45,7 +45,7 @@ jobs:
         echo "  <property name='key.alias' value='umkey'/>" >> build.xml
         echo "  <property name='key.store.password' value='${{ secrets.KEY_STORE_PASSWORD }}'/>" >> build.xml
         echo "  <property name='key.alias.password' value='${{ secrets.KEY_ALIAS_PASSWORD }}'/>" >> build.xml
-        echo "  <import file='$env:ANDROID_HOME/tools/ant/build.xml'/>" >> build.xml
+        echo "  <import file='$env:ANDROID_HOME/cmdline-tools/latest/lib/ant-tasks/build.xml'/>" >> build.xml
         echo "</project>" >> build.xml
         
     - name: Build with Ant
@@ -66,4 +66,16 @@ jobs:
         cmd /c "$env:ANDROID_HOME\tools\bin\lint --config lint.xml ."
       env:
         ANDROID_HOME: ${{ env.ANDROID_HOME }}
-        ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }} 
+        ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
+        
+    - name: Notify Slack on Build Status
+      if: always()
+      uses: slackapi/slack-github-action@v1.24.0
+      with:
+        payload: |
+          {
+            "text": "${{ job.status == 'success' && '✅' || '❌' }} Android 앱 빌드\n성공 유무: ${{ job.status }}\nOS: Windows\n저장소: ${{ github.repository }}\n브랜치: ${{ github.ref }}\n\n아티팩트 다운로드: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          }
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        SLACK_WEBHOOK_TYPE: INCOMING-WEBHOOK 
