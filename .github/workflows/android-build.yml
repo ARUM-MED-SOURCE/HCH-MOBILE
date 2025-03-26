@@ -21,9 +21,19 @@ jobs:
     - name: Install Android SDK
       uses: android-actions/setup-android@v2
       with:
-        api-level: 29
-        build-tools-version: '29.0.3'
-        platform: 'android-29'
+        api-level: 27
+        build-tools-version: '27.0.3'
+        platform: 'android-27'
+        extra-repositories: |
+          https://maven.google.com
+          https://dl.google.com/dl/android/maven2/
+        extra-packages: |
+          platform-tools
+          platform
+          build-tools
+          tools
+          extras;android;m2repository
+          extras;google;m2repository
         
     - name: Setup Gradle
       uses: gradle/gradle-build-action@v2
