@@ -29,6 +29,11 @@ jobs:
       run: |
         choco install ant -y
         
+    - name: Create required directories
+      run: |
+        mkdir gen
+        mkdir -p bin/classes
+        
     - name: Create build.xml
       run: |
         echo "<?xml version='1.0' encoding='UTF-8' standalone='no'?>" > build.xml
@@ -42,6 +47,10 @@ jobs:
         echo "    <property name='debuglevel' value='source,lines,vars'/>" >> build.xml
         echo "    <property name='target' value='1.7'/>" >> build.xml
         echo "    <property name='source' value='1.7'/>" >> build.xml
+        echo "    <property name='key.store' value='keystore/umkey'/>" >> build.xml
+        echo "    <property name='key.alias' value='alias'/>" >> build.xml
+        echo "    <property name='key.store.password' value='${{ secrets.KEY_STORE_PASSWORD }}'/>" >> build.xml
+        echo "    <property name='key.alias.password' value='${{ secrets.KEY_STORE_PASSWORD }}'/>" >> build.xml
         echo "    <path id='Android 10.libraryclasspath'>" >> build.xml
         echo "        <pathelement location='$env:ANDROID_HOME/platforms/android-29/android.jar'/>" >> build.xml
         echo "    </path>" >> build.xml
@@ -69,6 +78,7 @@ jobs:
         echo "    </path>" >> build.xml
         echo "    <target name='init'>" >> build.xml
         echo "        <mkdir dir='bin/classes'/>" >> build.xml
+        echo "        <mkdir dir='gen'/>" >> build.xml
         echo "        <copy includeemptydirs='false' todir='bin/classes'>" >> build.xml
         echo "            <fileset dir='src'>" >> build.xml
         echo "                <exclude name='**/*.launch'/>" >> build.xml
@@ -97,6 +107,16 @@ jobs:
         echo "        </javac>" >> build.xml
         echo "    </target>" >> build.xml
         echo "    <target description='Build all projects which reference this project. Useful to propagate changes.' name='build-refprojects'/>" >> build.xml
+        echo "    <target name='release'>" >> build.xml
+        echo "        <mkdir dir='bin'/>" >> build.xml
+        echo "        <dx input='bin/classes' output='bin/classes.dex'/>" >> build.xml
+        echo "        <aapt executable='$env:ANDROID_HOME/build-tools/25.0.3/aapt.exe' command='package' versioncode='1' debug='false' manifest='AndroidManifest.xml' assets='assets' res='res' out='bin/resources.ap_'/>" >> build.xml
+        echo "        <apkbuilder outfile='bin/app-release.apk' signed='true' signedjar='bin/app-release-signed.apk' keystore='${key.store}' storepass='${key.store.password}' alias='${key.alias}' keypass='${key.alias.password}'>" >> build.xml
+        echo "            <sourcefolder path='bin/classes.dex'/>" >> build.xml
+        echo "            <sourcefolder path='bin/resources.ap_'/>" >> build.xml
+        echo "        </apkbuilder>" >> build.xml
+        echo "        <zipalign in='bin/app-release-signed.apk' out='bin/app-release.apk'/>" >> build.xml
+        echo "    </target>" >> build.xml
         echo "</project>" >> build.xml
         
     - name: Build with Ant
