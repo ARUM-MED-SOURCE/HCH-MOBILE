@@ -38,15 +38,15 @@ jobs:
         echo "  <property name='target' value='android-29'/>" >> android-ant/build.xml
         echo "  <property name='buildtools.version' value='25.0.3'/>" >> android-ant/build.xml
         echo "  <property name='key.store' value='keystore/umkey'/>" >> android-ant/build.xml
-        echo "  <property name='key.alias' value='umkey'/>" >> android-ant/build.xml
+        echo "  <property name='key.alias' value='alias'/>" >> android-ant/build.xml
         echo "  <property name='key.store.password' value='${{ secrets.KEY_STORE_PASSWORD }}'/>" >> android-ant/build.xml
-        echo "  <property name='key.alias.password' value='${{ secrets.KEY_ALIAS_PASSWORD }}'/>" >> android-ant/build.xml
-        echo "  <taskdef name='aapt' classname='com.android.ant.AaptTask' classpath='$env:ANDROID_HOME/tools/lib/ant-tasks.jar'/>" >> android-ant/build.xml
-        echo "  <taskdef name='aidl' classname='com.android.ant.AidlTask' classpath='$env:ANDROID_HOME/tools/lib/ant-tasks.jar'/>" >> android-ant/build.xml
-        echo "  <taskdef name='apkbuilder' classname='com.android.ant.ApkBuilderTask' classpath='$env:ANDROID_HOME/tools/lib/ant-tasks.jar'/>" >> android-ant/build.xml
-        echo "  <taskdef name='dx' classname='com.android.ant.DxTask' classpath='$env:ANDROID_HOME/tools/lib/ant-tasks.jar'/>" >> android-ant/build.xml
-        echo "  <taskdef name='javac' classname='com.android.ant.JavacTask' classpath='$env:ANDROID_HOME/tools/lib/ant-tasks.jar'/>" >> android-ant/build.xml
-        echo "  <taskdef name='zipalign' classname='com.android.ant.ZipAlignTask' classpath='$env:ANDROID_HOME/tools/lib/ant-tasks.jar'/>" >> android-ant/build.xml
+        echo "  <property name='key.alias.password' value='${{ secrets.KEY_STORE_PASSWORD }}'/>" >> android-ant/build.xml
+        echo "  <taskdef name='aapt' classname='com.android.ant.AaptTask' classpath='$env:ANDROID_HOME/cmdline-tools/latest/lib/ant-tasks.jar'/>" >> android-ant/build.xml
+        echo "  <taskdef name='aidl' classname='com.android.ant.AidlTask' classpath='$env:ANDROID_HOME/cmdline-tools/latest/lib/ant-tasks.jar'/>" >> android-ant/build.xml
+        echo "  <taskdef name='apkbuilder' classname='com.android.ant.ApkBuilderTask' classpath='$env:ANDROID_HOME/cmdline-tools/latest/lib/ant-tasks.jar'/>" >> android-ant/build.xml
+        echo "  <taskdef name='dx' classname='com.android.ant.DxTask' classpath='$env:ANDROID_HOME/cmdline-tools/latest/lib/ant-tasks.jar'/>" >> android-ant/build.xml
+        echo "  <taskdef name='javac' classname='com.android.ant.JavacTask' classpath='$env:ANDROID_HOME/cmdline-tools/latest/lib/ant-tasks.jar'/>" >> android-ant/build.xml
+        echo "  <taskdef name='zipalign' classname='com.android.ant.ZipAlignTask' classpath='$env:ANDROID_HOME/cmdline-tools/latest/lib/ant-tasks.jar'/>" >> android-ant/build.xml
         echo "  <target name='help'>" >> android-ant/build.xml
         echo "    <echo>Available targets:</echo>" >> android-ant/build.xml
         echo "    <echo>  release: Build release APK</echo>" >> android-ant/build.xml
@@ -97,7 +97,7 @@ jobs:
       with:
         payload: |
           {
-            "text": "${{ job.status == 'success' && '✅' || '❌' }} Android CI 빌드 결과\n• 성공 유무: ${{ job.status }}\n• 저장소: ${{ github.repository }}\n• 브랜치: ${{ github.ref_name }}\n\n빌드된 APK 다운로드 링크\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            "text": "${{ job.status == 'success' && '✅' || '❌'}} Android CI 빌드 결과\n• 성공 유무: ${{ job.status }}\n• 저장소: ${{ github.repository }}\n• 브랜치: ${{ github.ref_name }}\n\n<${github.server_url}/${github.repository}/actions/runs/${github.run_id}|빌드된 APK 다운로드 링크>"
           }
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
