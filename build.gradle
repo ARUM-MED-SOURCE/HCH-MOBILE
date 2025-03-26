@@ -23,6 +23,7 @@ apply plugin: 'android'
 
 buildscript {
     repositories {
+        google()
         mavenCentral()
     }
 
@@ -31,9 +32,16 @@ buildscript {
     // http://tools.android.com/tech-docs/new-build-system/version-compatibility
     // and https://issues.apache.org/jira/browse/CB-8143
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.5.0'
+        classpath 'com.android.tools.build:gradle:7.4.2'
     }
-   }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
 
 // Allow plugins to declare Maven dependencies via build-extras.gradle.
 repositories {
@@ -302,4 +310,8 @@ for (def func : cdvPluginPostBuildExtras) {
 //     ext.postBuildExtras = { ... code here ... }
 if (hasProperty('postBuildExtras')) {
     postBuildExtras()
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }
