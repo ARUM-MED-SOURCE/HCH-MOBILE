@@ -29,6 +29,11 @@ jobs:
       run: |
         choco install ant -y
         
+    - name: Download Android Ant Build Script
+      run: |
+        mkdir -p android-ant
+        curl -L https://raw.githubusercontent.com/android/platform_sdk_base/master/tools/ant/build.xml -o android-ant/build.xml
+        
     - name: Create build.xml
       run: |
         echo "<?xml version='1.0' encoding='UTF-8'?>" > build.xml
@@ -40,7 +45,7 @@ jobs:
         echo "  <property name='key.alias' value='alias'/>" >> build.xml
         echo "  <property name='key.store.password' value='${{ secrets.KEY_STORE_PASSWORD }}'/>" >> build.xml
         echo "  <property name='key.alias.password' value='${{ secrets.KEY_STORE_PASSWORD }}'/>" >> build.xml
-        echo "  <import file='$env:ANDROID_HOME/cmdline-tools/latest/lib/ant-tasks/build.xml'/>" >> build.xml
+        echo "  <import file='android-ant/build.xml'/>" >> build.xml
         echo "</project>" >> build.xml
         
     - name: Build with Ant
