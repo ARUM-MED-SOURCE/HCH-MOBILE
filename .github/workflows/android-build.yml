@@ -25,11 +25,15 @@ jobs:
         build-tools-version: '25.0.3'
         platform: 'android-29'
         
-    - name: Install Ant
-      run: sudo apt-get update && sudo apt-get install -y ant
+    - name: Setup Gradle
+      run: |
+        wget https://services.gradle.org/distributions/gradle-7.5-bin.zip
+        sudo mkdir /opt/gradle
+        sudo unzip -d /opt/gradle gradle-7.5-bin.zip
+        echo "PATH=$PATH:/opt/gradle/gradle-7.5/bin" >> $GITHUB_ENV
         
-    - name: Build with Ant
-      run: ant release
+    - name: Build with Gradle
+      run: ./gradlew assembleRelease
       env:
         ANDROID_HOME: ${{ env.ANDROID_HOME }}
         ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
@@ -38,11 +42,10 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: app-release
-        path: bin/*-release.apk
+        path: app/build/outputs/apk/release/app-release.apk
         
     - name: Run Lint
-      run: |
-        $ANDROID_HOME/tools/bin/lint --config lint.xml .
+      run: ./gradlew lint
       env:
         ANDROID_HOME: ${{ env.ANDROID_HOME }}
         ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }} 
