@@ -45,7 +45,7 @@ jobs:
         echo "  <property name='key.alias' value='umkey'/>" >> build.xml
         echo "  <property name='key.store.password' value='${{ secrets.KEY_STORE_PASSWORD }}'/>" >> build.xml
         echo "  <property name='key.alias.password' value='${{ secrets.KEY_ALIAS_PASSWORD }}'/>" >> build.xml
-        echo "  <import file='$env:ANDROID_HOME/cmdline-tools/latest/lib/ant-tasks/build.xml'/>" >> build.xml
+        echo "  <import file='$env:ANDROID_HOME/build-tools/25.0.3/ant/build.xml'/>" >> build.xml
         echo "</project>" >> build.xml
         
     - name: Build with Ant
