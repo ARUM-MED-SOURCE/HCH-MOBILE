@@ -26,7 +26,7 @@ jobs:
         platform: 'android-29'
         
     - name: Build with Gradle
-      run: gradlew.bat assembleRelease
+      run: .\gradlew.bat assembleRelease
       env:
         ANDROID_HOME: ${{ env.ANDROID_HOME }}
         ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
@@ -38,7 +38,7 @@ jobs:
         path: app/build/outputs/apk/release/app-release.apk
         
     - name: Run Lint
-      run: gradlew.bat lint
+      run: .\gradlew.bat lint
       env:
         ANDROID_HOME: ${{ env.ANDROID_HOME }}
         ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }} 
