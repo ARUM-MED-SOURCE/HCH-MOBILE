@@ -32,7 +32,7 @@ jobs:
         
     - name: Build with Gradle
       run: |
-        ./gradlew assembleRelease
+        gradlew.bat assembleRelease
       env:
         ANDROID_HOME: ${{ env.ANDROID_HOME }}
         ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
@@ -45,7 +45,7 @@ jobs:
         
     - name: Run Lint
       run: |
-        ./gradlew lint
+        gradlew.bat lint
       env:
         ANDROID_HOME: ${{ env.ANDROID_HOME }}
         ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
