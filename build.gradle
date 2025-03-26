@@ -27,7 +27,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.2'
+        classpath 'com.android.tools.build:gradle:3.6.4'
     }
 }
 
@@ -135,14 +135,14 @@ task cdvPrintProps {
 }
 
 android {
-    compileSdkVersion cdvCompileSdkVersion
-    buildToolsVersion cdvBuildToolsVersion
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
 
     defaultConfig {
         applicationId "kr.co.clipsoft.hchmobileconsent"
-        minSdkVersion cdvMinSdkVersion
-        targetSdkVersion cdvCompileSdkVersion
-        versionCode cdvVersionCode
+        minSdkVersion 19
+        targetSdkVersion 29
+        versionCode 1
         versionName "1.0"
     }
 
