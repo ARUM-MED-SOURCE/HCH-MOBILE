@@ -1,0 +1,785 @@
+<!doctype html>
+<html lang="kr">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+	<title>병원 전자동의서</title>
+	<link rel="stylesheet" href="../../css/login.css">
+	<script src="../../lib/js/jquery-1.12.4.min.js"></script>   
+</head>
+
+<body>
+	<div id='selectHospital'>
+		<div><img src="../../images/catholicLogo.png" alt=""></div>
+		<div style='
+		margin-top: 65px;
+		width: 40%;
+		margin-left: 59px;'> 
+			<select id="_HospitalList" style="background:white;">
+			   <option value="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				   기관 선택</option>
+			   <option value="012">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;서울성모병원</option>
+			   <option value="015">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;은평성모병원</option>
+		   </select>
+		</div>
+		<button type="button" id="_btnSelect" >
+			<span style="margin-top: 14%; margin-left: -15%; position: absolute;"> 선택</span>
+		</button> 
+		<span id='selectTxt'>기관선택은 초기에 1회 가능합니다.</span>
+		
+	</div>
+	<button id="notice_btn"><img src="../../images/megaphone.png" style="width:100%;height:100%;position:initial" alt="" /></button>
+	<button id="help_btn" style='visibility:hidden ;'><img src="../../images/question.png" style="width:100%;height:100%;position:initial" alt="" /></button>
+	<button id="help_btns"><img src="../../images/open-book.png" style="width:75%;height:75%;position:initial" alt="" /></button>
+	
+	<div id="help_layout" style="display: none;">
+	<img src="../../images/quick.jpg" alt="" style="width:100%;height:auto; position: initial;" />
+		<img src="../../images/quick_2.jpg" alt="" style="width:100%;height:auto; position: initial;" />
+	<button type="button" id="helpCloseBtn" style="top:45px; position: fixed;  z-index: 10; right: 75px; "  class="btn-close"> 
+			<span>CLOSE</span>
+		</button>
+	</div>
+		<div id="help_layouts" style="display: none;">
+	 
+		
+	<button type="button" id="helpCloseBtns" style="top:45px; position: fixed;    z-index: 10; right: 75px; " class="btn-close"> 
+			<span>CLOSE</span>
+		</button>
+	</div>
+	<div id="notice_layout">
+		<button type="button" id="noticeCloseBtn" style="top:10px;" class="btn-close"> 
+			<span>CLOSE</span>
+		</button>
+	 	<div style="width: 100%;height: 10%;font-size: 24px;font-weight: bold;"><span style="margin-left: 3%;position: absolute;top: 2%;">Notice</span></div>
+		<div id="notice_table_layout">
+		<div class = "notice_box" >
+			<div class="notice_circle"><span class="update_circle_text">Update</span></div>
+			<div class="notice_title"><span class="notice_title_text">[운영] CMC_CONSENT_SIGN V_2.02 업데이트 안내</span></div> 
+			<div class="notice_date"><span class="notice_date_text">2019-01-14</span></div>
+		</div>
+		<div class="notice_full_text" style="display: none;">
+				<div style="margin-left: 5%;    padding-bottom: 5%;margin-top: 3%; ">
+				<span style="    line-height: 26px;">					[CMC_CONSENT_SIGN_V_2.02  업데이트 안내]
+			<br> 
+			<br>
+			&nbsp;안녕하세요. 아름누리메디컴입니다.
+			<br>
+			&nbsp;버전 업그레이드 및 업데이트 진행 내역 안내입니다.<br>
+			<br>
+			[ 전자동의서 문의사항 : 내선번호 - 3713 / CMC TALK 최윤수 검색 후 메시지 ]
+			<br>
+			<br>
+			[현 버전] <br>&nbsp; V_2.01<br> 
+			<br>
+			[업데이트 버전] <br>&nbsp; V_2.02<br> 
+			<br> 
+			[업데이트 및 수정 내역]<br>
+			&nbsp;1. 안정화 작업이 진행되었습니다. <br>  
+			&nbsp;2. 수혈동의서를 위한 작업이 진행되었습니다. <br> 
+			<br>                          
+			감사합니다.  
+			<br></span>
+			</div>
+		</div>
+		<div class = "notice_box" >
+			<div class="notice_circle"><span class="update_circle_text">Update</span></div>
+			<div class="notice_title"><span class="notice_title_text">[운영] CMC_CONSENT_SIGN V_2.01 업데이트 안내</span></div> 
+			<div class="notice_date"><span class="notice_date_text">2019-01-09</span></div>
+		</div>
+		<div class="notice_full_text" style="display: none;">
+				<div style="margin-left: 5%;    padding-bottom: 5%;margin-top: 3%; ">
+				<span style="    line-height: 26px;">					[CMC_CONSENT_SIGN_V_2.01  업데이트 안내]
+			<br> 
+			<br>
+			&nbsp;안녕하세요. 아름누리메디컴입니다.
+			<br>
+			&nbsp;버전 업그레이드 및 업데이트 진행 내역 안내입니다.<br>
+			<br>
+			[ 전자동의서 문의사항 : 내선번호 - 3713 / CMC TALK 최윤수 검색 후 메시지 ]
+			<br>
+			<br>
+			[현 버전] <br>&nbsp; V_2.00<br> 
+			<br>
+			[업데이트 버전] <br>&nbsp; V_2.01<br> 
+			<br> 
+			[업데이트 및 수정 내역]<br>
+			&nbsp;1. 공인인증서 패스워드 오류 발생 시 값을 지우기 편하게 변경되었습니다. <br>  
+			&nbsp;2. 각 탭의 검색조건 작성 상태가 세분화되었습니다. <br> 
+			<br>                          
+			감사합니다.  
+			<br></span>
+			</div>
+		</div>
+		<div class = "notice_box" >
+			<div class="notice_circle"><span class="update_circle_text">Update</span></div>
+			<div class="notice_title"><span class="notice_title_text">[운영] CMC_CONSENT_SIGN V_2.00 업데이트 안내</span></div> 
+			<div class="notice_date"><span class="notice_date_text">2019-01-06</span></div>
+		</div>
+		<div class="notice_full_text" style="display: none;">
+				<div style="margin-left: 5%;    padding-bottom: 5%;margin-top: 3%; ">
+				<span style="    line-height: 26px;">					[CMC_CONSENT_SIGN_V_2.00  업데이트 안내]
+			<br> 
+			<br>
+			&nbsp;안녕하세요. 아름누리메디컴입니다.
+			<br>
+			&nbsp;버전 업그레이드 및 업데이트 진행 내역 안내입니다.<br>
+			<br>
+			[ 전자동의서 문의사항 : 내선번호 - 3713 / CMC TALK 최윤수 검색 후 메시지 ]
+			<br>
+			<br>
+			[현 버전] <br>&nbsp; V_1.22<br> 
+			<br>
+			[업데이트 버전] <br>&nbsp; V_2.00<br> 
+			<br> 
+			[업데이트 및 수정 내역]<br>
+			&nbsp;1. 의뢰 탭이 새롭게 추가되었습니다. <br>  
+			&nbsp;2. 외래 건강증진센터 일건/종건 분류 값이 추가되었습니다. <br>
+			&nbsp;3. 외래 건강증진센터 진단명->패키지명으로 변경되었습니다. <br>
+			&nbsp;4. 입원,외래,응급,수술,검색,의뢰 탭에서 작성 상태 검색 조건이 추가되었습니다. <br>
+			&nbsp;5. 입원,외래,응급,수술,검색,의뢰 탭에서 작성 상태를 표기하는 아이콘이 추가되었습니다. (환자리스트 초록색 아이콘 有 : 임시 or <br>
+			&nbsp;&nbsp;&nbsp;&nbsp;인증 저장을 완료한 환자 ) <br>
+			&nbsp;6. 환자 정보에 생년월일이 추가되었습니다. <br>
+			<br>                          
+			감사합니다.  
+			<br></span>
+			</div>
+		</div>
+		<div class = "notice_box" >
+			<div class="notice_circle"><span class="update_circle_text">Update</span></div>
+			<div class="notice_title"><span class="notice_title_text">[운영] CMC_CONSENT_SIGN V_1.22 업데이트 안내</span></div> 
+			<div class="notice_date"><span class="notice_date_text">2019-12-26</span></div>
+		</div>
+		<div class="notice_full_text" style="display: none;">
+				<div style="margin-left: 5%;    padding-bottom: 5%;margin-top: 3%; ">
+				<span style="    line-height: 26px;">					[CMC_CONSENT_SIGN_V_1.22  업데이트 안내]
+			<br> 
+			<br>
+			&nbsp;안녕하세요. 아름누리메디컴입니다.
+			<br>
+			&nbsp;버전 업그레이드 및 업데이트 진행 내역 안내입니다.<br>
+			<br>
+			[현 버전] <br>&nbsp; V_1.20<br> 
+			<br>
+			[업데이트 버전] <br>&nbsp; V_1.22<br> 
+			<br> 
+			[업데이트 및 수정 내역]<br>
+			&nbsp;1. 작성동의서 빠른 조회탭에서 뷰어 호출 후 다시 본 화면으로 돌아왔을 때 자동으로 정렬이 진행됩니다. <br>  
+			&nbsp;2. 특정 케이스에서 작성동의서 빠른 조회탭에서 임시저장된 서식을 열 때 환자 정보가 변경되는 오류가 해결되었습니다. <br>
+			&nbsp;3. 로그인 한 사용자의 진료과가 자동으로 설정됩니다. 과/병동이 없을 경우 로그아웃 시 마지막으로 설정해두었던 과/병동이 자동으로 <br> &nbsp; &nbsp;선택됩니다. <br>
+			&nbsp;4. 외래 탭의 머릿말 부분의 공간이 조정되었습니다. <br>
+			<br>           
+			감사합니다.  
+			<br></span>
+			</div>
+		</div>
+		<div class = "notice_box" >
+			<div class="notice_circle"><span class="update_circle_text">Update</span></div>
+			<div class="notice_title"><span class="notice_title_text">[운영] CMC_CONSENT_SIGN V_1.20 업데이트 안내</span></div> 
+			<div class="notice_date"><span class="notice_date_text">2019-12-17</span></div>
+		</div>
+		<div class="notice_full_text" style="display: none;">
+				<div style="margin-left: 5%;    padding-bottom: 5%;margin-top: 3%; ">
+				<span style="    line-height: 26px;">					[CMC_CONSENT_SIGN_V_1.20  업데이트 안내]
+			<br> 
+			<br>
+			&nbsp;안녕하세요. 아름누리메디컴입니다.
+			<br>
+			&nbsp;버전 업그레이드 긴급 업데이트 진행 내역 안내입니다.<br>
+			<br>
+			[현 버전] <br>&nbsp; V_1.19<br> 
+			<br>
+			[업데이트 버전] <br>&nbsp; V_1.20<br> 
+			<br> 
+			[업데이트 및 수정 내역]<br>
+			&nbsp;1. 교육관련 공지사항이 메인 화면 진입 시 자동으로 오픈되게 됩니다. <br>  
+			&nbsp;2. 임시저장 삭제 시 삭제 여부 팝업이 추가되었습니다. <br>
+			&nbsp;3. 2020.01.06(월)부터 Paper동의서가 사용 종료될 예정입니다. 1.에서 뜨는 공지사항 확인 부탁드립니다. 
+			<br>                 
+			감사합니다.  
+			<br></span>
+			</div>
+		</div>
+		<div class = "notice_box" >
+			<div class="notice_circle"><span class="update_circle_text">Update</span></div>
+			<div class="notice_title"><span class="notice_title_text">[운영] CMC_CONSENT_SIGN V_1.19 긴급 업데이트 안내</span></div> 
+			<div class="notice_date"><span class="notice_date_text">2019-12-12</span></div>
+		</div>
+		<div class="notice_full_text" style="display: none;">
+				<div style="margin-left: 5%;    padding-bottom: 5%;margin-top: 3%; ">
+				<span style="    line-height: 26px;">					[CMC_CONSENT_SIGN_V_1.19  업데이트 안내]
+			<br> 
+			<br>
+			&nbsp;안녕하세요. 아름누리메디컴입니다.
+			<br>
+			&nbsp;버전 업그레이드 및 긴급 업데이트 진행 내역 안내입니다.<br>
+			<br>
+			[현 버전] <br>&nbsp; V_1.18<br> 
+			<br>
+			[업데이트 버전] <br>&nbsp; V_1.19<br> 
+			<br> 
+			[업데이트 및 수정 내역]<br>
+			&nbsp;1. 특정 계정으로 임시저장된 서식이 열리지 않던 오류가 해결되었습니다. 
+			<br>    
+			감사합니다.  
+			<br></span>
+			</div>
+		</div>
+		<div class = "notice_box" >
+			<div class="notice_circle"><span class="update_circle_text">Update</span></div>
+			<div class="notice_title"><span class="notice_title_text">[운영] CMC_CONSENT_SIGN V_1.18 긴급 업데이트 안내</span></div> 
+			<div class="notice_date"><span class="notice_date_text">2019-12-12</span></div>
+		</div>
+		<div class="notice_full_text" style="display: none;">
+				<div style="margin-left: 5%;    padding-bottom: 5%;margin-top: 3%; ">
+				<span style="    line-height: 26px;">					[CMC_CONSENT_SIGN_V_1.18  업데이트 안내]
+			<br> 
+			<br>
+			&nbsp;안녕하세요. 아름누리메디컴입니다.
+			<br>
+			&nbsp;버전 업그레이드 및 긴급 업데이트 진행 내역 안내입니다.<br>
+			<br>
+			[현 버전] <br>&nbsp; V_1.17<br> 
+			<br>
+			[업데이트 버전] <br>&nbsp; V_1.18<br> 
+			<br> 
+			[업데이트 및 수정 내역]<br>
+			&nbsp;1. 시술의 관련 프로세스 오류가 수정되었습니다. 
+			<br>    
+			감사합니다.  
+			<br></span>
+			</div>
+		</div>
+		<div class = "notice_box" >
+			<div class="notice_circle"><span class="update_circle_text">Update</span></div>
+			<div class="notice_title"><span class="notice_title_text">[운영] CMC_CONSENT_SIGN V_1.17 업데이트 안내</span></div> 
+			<div class="notice_date"><span class="notice_date_text">2019-11-21</span></div>
+		</div>
+		<div class="notice_full_text" style="display: none;">
+				<div style="margin-left: 5%;    padding-bottom: 5%;margin-top: 3%; "><span style="    line-height: 26px;">					[CMC_CONSENT_SIGN_V_1.17  업데이트 안내]
+			<br> 
+			<br>
+			&nbsp;안녕하세요. 아름누리메디컴입니다.
+			<br>
+			&nbsp;버전 업그레이드 및 업데이트 진행 내역 안내입니다.<br>
+			<br>
+			[현 버전] <br>&nbsp; V_1.16<br> 
+			<br>
+			[업데이트 버전] <br>&nbsp; V_1.17<br> 
+			<br> 
+			[업데이트 및 수정 내역]<br>
+			&nbsp;1. OCR 전용으로 사용되는 서식이 조회되는 오류가 해결되었습니다. 
+			<br>   
+			감사합니다.  
+			<br></span>
+			</div>
+		</div>
+		<div class = "notice_box" >
+			<div class="notice_circle"><span class="update_circle_text">Update</span></div>
+			<div class="notice_title"><span class="notice_title_text">[운영] CMC_CONSENT_SIGN V_1.16 업데이트 안내</span></div> 
+			<div class="notice_date"><span class="notice_date_text">2019-11-11</span></div>
+		</div>
+		<div class="notice_full_text" style="display: none;">
+				<div style="margin-left: 5%;    padding-bottom: 5%;margin-top: 3%; "><span style="    line-height: 26px;">					[CMC_CONSENT_SIGN_V_1.16  업데이트 안내]
+			<br> 
+			<br>
+			&nbsp;안녕하세요. 아름누리메디컴입니다.
+			<br>
+			&nbsp;버전 업그레이드 및 업데이트 진행 내역 안내입니다.<br>
+			<br>
+			[현 버전] <br>&nbsp; V_1.15<br> 
+			<br>
+			[업데이트 버전] <br>&nbsp; V_1.16<br> 
+			<br> 
+			[업데이트 및 수정 내역]<br>
+			&nbsp;1. 처방 동의서 여러개가 체크 및 실행되지 않던 문제가 해결되었습니다.
+			<br>             
+			&nbsp;2. 작성 동의서 빠른 조회 탭에서 건진 과가 조회되지 않던 문제가 해결되었습니다.
+			<br>      
+			감사합니다.  
+			<br></span>
+			</div>
+		</div>
+		<div class = "notice_box" >
+			<div class="notice_circle"><span class="update_circle_text">Update</span></div>
+			<div class="notice_title"><span class="notice_title_text">[운영] CMC_CONSENT_SIGN V_1.15 업데이트 안내</span></div> 
+			<div class="notice_date"><span class="notice_date_text">2019-11-04</span></div>
+		</div>
+		<div class="notice_full_text" style="display: none;">
+				<div style="margin-left: 5%;    padding-bottom: 5%;margin-top: 3%; "><span style="    line-height: 26px;">					[CMC_CONSENT_SIGN_V_1.15  업데이트 안내]
+			<br> 
+			<br>
+			&nbsp;안녕하세요. 아름누리메디컴입니다.
+			<br>
+			&nbsp;버전 업그레이드 및 업데이트 진행 내역 안내입니다.<br>
+			<br>
+			[현 버전] <br>&nbsp; V_1.14<br> 
+			<br>
+			[업데이트 버전] <br>&nbsp; V_1.15<br> 
+			<br> 
+			[업데이트 및 수정 내역]<br>
+			&nbsp;1. 임시 저장된 서식을 열게 될 경우 간호사 이름이 재매핑되도록 수정되었습니다.
+			<br>             
+			&nbsp;2. 의사 권한 계정으로 간호 서식과 의사 서식을 동시에 열 경우 열리지 않는 문제를 해결하였습니다.
+			<br>              
+			&nbsp;3. 간호사 권한 계정으로 의사 전용 서식과 간호 전용 서식을 동시에 열 경우 임시저장 버튼만 활성화된 후 뷰어가 호출됩니다.
+			<br>                   
+			감사합니다.  
+			<br></span>
+			</div>
+		</div>
+		<div class = "notice_box" >
+			<div class="notice_circle"><span class="update_circle_text">Update</span></div>
+			<div class="notice_title"><span class="notice_title_text">[운영] CMC_CONSENT_SIGN V_1.14 업데이트 안내</span></div> 
+			<div class="notice_date"><span class="notice_date_text">2019-10-31</span></div>
+		</div>
+		<div class="notice_full_text" style="display: none;">
+				<div style="margin-left: 5%;    padding-bottom: 5%;margin-top: 3%; "><span style="    line-height: 26px;">					[CMC_CONSENT_SIGN_V_1.14  업데이트 안내]
+			<br> 
+			<br>
+			&nbsp;안녕하세요. 아름누리메디컴입니다.
+			<br>
+			&nbsp;버전 업그레이드 및 업데이트 진행 내역 안내입니다.<br>
+			<br>
+			[현 버전] <br>&nbsp; V_1.13<br> 
+			<br>
+			[업데이트 버전] <br>&nbsp; V_1.14<br> 
+			<br> 
+			[업데이트 및 수정 내역]<br>
+			&nbsp;1. 코사인 관련 기능 오류가 있어 업데이트가 진행되었습니다.
+			<br>             
+			&nbsp;2. 서명란에 올바르게 입력이 되있음에도 진행이 되지않는 문제가 해결되었습니다.
+			<br>     
+			감사합니다.  
+			<br></span>
+			</div>
+		</div>
+		<div class = "notice_box" >
+			<div class="notice_circle"><span class="update_circle_text">Update</span></div>
+			<div class="notice_title"><span class="notice_title_text">[운영] CMC_CONSENT_SIGN V_1.13 업데이트 안내</span></div> 
+			<div class="notice_date"><span class="notice_date_text">2019-10-31</span></div>
+		</div>
+		<div class="notice_full_text" style="display: none;">
+				<div style="margin-left: 5%;    padding-bottom: 5%;margin-top: 3%; "><span style="    line-height: 26px;">					[CMC_CONSENT_SIGN_V_1.13  업데이트 안내]
+			<br> 
+			<br>
+			&nbsp;안녕하세요. 아름누리메디컴입니다.
+			<br>
+			&nbsp;버전 업그레이드 및 업데이트 진행 내역 안내입니다.<br>
+			<br>
+			[현 버전] <br>&nbsp; V_1.12<br> 
+			<br>
+			[업데이트 버전] <br>&nbsp; V_1.13<br> 
+			<br> 
+			[업데이트 및 수정 내역]<br>
+			&nbsp;1. 작성 동의서 빠른 조회 탭이 생성되었습니다. 각 검색 조건에 맞게 설정 후 검색 시 모든 환자의 작성 동의서를 검색할 수 있습니다.
+			<br>       
+			&nbsp;2. 사용자메뉴얼 및 퀵가이드 참조 부탁드립니다.
+			<br>       
+			&nbsp;3. 로그인 시 로딩바가 추가되었습니다.
+			<br>       
+			&nbsp;4. 뷰어 실행 시 로딩바가 보여지도록 수정되었습니다.
+			<br>      
+			감사합니다.  
+			<br></span>
+			</div>
+		</div>
+		<div class = "notice_box" >
+			<div class="notice_circle"><span class="update_circle_text">Update</span></div>
+			<div class="notice_title"><span class="notice_title_text">[운영] CMC_CONSENT_SIGN V_1.12 업데이트 안내</span></div> 
+			<div class="notice_date"><span class="notice_date_text">2019-10-29</span></div>
+		</div>
+		<div class="notice_full_text" style="display: none;">
+				<div style="margin-left: 5%;    padding-bottom: 5%;margin-top: 3%; "><span style="    line-height: 26px;">					[CMC_CONSENT_SIGN_V_1.12  업데이트 안내]
+			<br> 
+			<br>
+			&nbsp;안녕하세요. 아름누리메디컴입니다.
+			<br>
+			&nbsp;버전 업그레이드 및 업데이트 진행 내역 안내입니다.<br>
+			<br>
+			[현 버전] <br>&nbsp; V_1.11<br> 
+			<br>
+			[업데이트 버전] <br>&nbsp; V_1.12<br> 
+			<br> 
+			[업데이트 및 수정 내역]<br>
+			&nbsp;1. 안정화 작업이 진행되었습니다.
+			<br>        
+			&nbsp;2. 31일 오전에 운영 추가 업데이트가 진행될 예정입니다. 
+			<br>      
+			감사합니다.  
+			<br></span>
+			</div>
+		</div>
+		<div class = "notice_box" >
+			<div class="notice_circle"><span class="update_circle_text">Update</span></div>
+			<div class="notice_title"><span class="notice_title_text">[운영] CMC_CONSENT_SIGN V_1.11 업데이트 안내</span></div> 
+			<div class="notice_date"><span class="notice_date_text">2019-10-17</span></div>
+		</div>
+		<div class="notice_full_text" style="display: none;">
+				<div style="margin-left: 5%;    padding-bottom: 5%;margin-top: 3%; "><span style="    line-height: 26px;">					[CMC_CONSENT_SIGN_V_1.11  업데이트 안내]
+			<br> 
+			<br>
+			&nbsp;안녕하세요. 아름누리메디컴입니다.
+			<br>
+			&nbsp;버전 업그레이드 및 업데이트 진행 내역 안내입니다.<br>
+			<br>
+			[현 버전] <br>&nbsp; V_1.10<br> 
+			<br>
+			[업데이트 버전] <br>&nbsp; V_1.11<br> 
+			<br> 
+			[업데이트 및 수정 내역]<br>
+			&nbsp;1. 코사인 지정 후 작성동의서 탭에서 확인할 경우 병동/진료과 중 한 개가 비활성화되지 않는 오류가 수정되었습니다.
+			<br>      
+			감사합니다.  
+			<br></span>
+			</div>
+		</div>
+		<div class = "notice_box" >
+			<div class="notice_circle"><span class="update_circle_text">Update</span></div>
+			<div class="notice_title"><span class="notice_title_text">[운영] CMC_CONSENT_SIGN V_1.10 업데이트 안내</span></div> 
+			<div class="notice_date"><span class="notice_date_text">2019-10-11</span></div>
+		</div>
+		<div class="notice_full_text" style="display: none;">
+				<div style="margin-left: 5%;    padding-bottom: 5%;margin-top: 3%; "><span style="    line-height: 26px;">					[CMC_CONSENT_SIGN_V_1.10  업데이트 안내]
+			<br> 
+			<br>
+			&nbsp;안녕하세요. 아름누리메디컴입니다.
+			<br>
+			&nbsp;버전 업그레이드 및 업데이트 진행 내역 안내입니다.<br>
+			<br>
+			[현 버전] <br>&nbsp; V_1.09<br> 
+			<br>
+			[업데이트 버전] <br>&nbsp; V_1.10<br> 
+			<br> 
+			[업데이트 및 수정 내역]<br>
+			&nbsp;1. 안정화 작업이 진행되었습니다.
+			<br>     
+			감사합니다.  
+			<br></span>
+			</div>
+		</div>
+		<div class = "notice_box" >
+			<div class="notice_circle"><span class="update_circle_text">Update</span></div>
+			<div class="notice_title"><span class="notice_title_text">[운영] CMC_CONSENT_SIGN V_1.09 업데이트 안내</span></div> 
+			<div class="notice_date"><span class="notice_date_text">2019-10-08</span></div>
+		</div>
+		<div class="notice_full_text" style="display: none;">
+				<div style="margin-left: 5%;    padding-bottom: 5%;margin-top: 3%; "><span style="    line-height: 26px;">					[CMC_CONSENT_SIGN_V_1.09  업데이트 안내]
+			<br> 
+			<br>
+			&nbsp;안녕하세요. 아름누리메디컴입니다.
+			<br>
+			&nbsp;버전 업그레이드 및 업데이트 진행 내역 안내입니다.<br>
+			<br>
+			[현 버전] <br>&nbsp; V_1.08<br> 
+			<br>
+			[업데이트 버전] <br>&nbsp; V_1.09<br> 
+			<br> 
+			[업데이트 및 수정 내역]<br>
+			&nbsp;1. 응급 탭 검색 조건이 추가되었습니다.
+			<br>     
+			감사합니다.  
+			<br></span>
+			</div>
+		</div>
+		<div class = "notice_box" >
+			<div class="notice_circle"><span class="update_circle_text">Update</span></div>
+			<div class="notice_title"><span class="notice_title_text">[운영] CMC_CONSENT_SIGN V_1.08 업데이트 안내</span></div> 
+			<div class="notice_date"><span class="notice_date_text">2019-10-07</span></div>
+		</div>
+		<div class="notice_full_text" style="display: none;">
+				<div style="margin-left: 5%;    padding-bottom: 5%;margin-top: 3%; "><span style="    line-height: 26px;">					[CMC_CONSENT_SIGN_V_1.08  업데이트 안내]
+			<br> 
+			<br>
+			&nbsp;안녕하세요. 아름누리메디컴입니다.
+			<br>
+			&nbsp;버전 업그레이드 및 업데이트 진행 내역 안내입니다.<br>
+			<br>
+			[현 버전] <br>&nbsp; V_1.07<br> 
+			<br>
+			[업데이트 버전] <br>&nbsp; V_1.08<br> 
+			<br> 
+			[업데이트 및 수정 내역]<br>
+			&nbsp;1. OCR 서식이 전자동의서로 작성되는 케이스가 파악되어 차단된 상태입니다.
+			<br>      
+			&nbsp;2. 서버 시간과 디바이스 시간 오차 범위가 1분으로 축소되었습니다. 
+			<br>   
+			감사합니다.  
+			<br></span>
+			</div>
+		</div>
+		<div class = "notice_box" >
+			<div class="notice_circle"><span class="update_circle_text">Update</span></div>
+			<div class="notice_title"><span class="notice_title_text">[운영] CMC_CONSENT_SIGN V_1.07 업데이트 안내</span></div> 
+			<div class="notice_date"><span class="notice_date_text">2019-10-02</span></div>
+		</div>
+		<div class="notice_full_text" style="display: none;">
+				<div style="margin-left: 5%;    padding-bottom: 5%;margin-top: 3%; "><span style="    line-height: 26px;">					[CMC_CONSENT_SIGN_V_1.07  업데이트 안내]
+			<br> 
+			<br>
+			&nbsp;안녕하세요. 아름누리메디컴입니다.
+			<br>
+			&nbsp;버전 업그레이드 및 업데이트 진행 내역 안내입니다.<br>
+			<br>
+			[현 버전] <br>&nbsp; V_1.06<br> 
+			<br>
+			[업데이트 버전] <br>&nbsp; V_1.07<br> 
+			<br> 
+			[업데이트 및 수정 내역]<br>
+			&nbsp;1. ID / PW 입력이 되어있던 현상이 해결되었습니다. 
+			<br>  
+			감사합니다.  
+			<br></span>
+			</div>
+		</div>
+		<div class = "notice_box" >
+			<div class="notice_circle"><span class="update_circle_text">Update</span></div>
+			<div class="notice_title"><span class="notice_title_text">[운영] CMC_CONSENT_SIGN V_1.06 업데이트 안내</span></div> 
+			<div class="notice_date"><span class="notice_date_text">2019-10-02</span></div>
+		</div>
+		<div class="notice_full_text" style="display: none;">
+				<div style="margin-left: 5%;    padding-bottom: 5%;margin-top: 3%; "><span style="    line-height: 26px;">					[CMC_CONSENT_SIGN_V_1.06  업데이트 안내]
+			<br> 
+			<br>
+			&nbsp;안녕하세요. 아름누리메디컴입니다.
+			<br>
+			&nbsp;버전 업그레이드 및 업데이트 진행 내역 안내입니다.<br>
+			<br>
+			[현 버전] <br>&nbsp; V_1.05<br> 
+			<br>
+			[업데이트 버전] <br>&nbsp; V_1.06<br> 
+			<br> 
+			[업데이트 및 수정 내역]<br>
+			&nbsp;1. 시간이 올바르게 설정되있으나, 시간 설정을 확인하라는 팝업이 뜨던 문제가 해결되었습니다.<br> 
+			&nbsp;2. 미등록 디바이스는 로그인이 불가능하도록 변경되었습니다.
+			<br>
+			감사합니다.  
+			<br></span>
+			</div>
+		</div>
+		<div class = "notice_box" >
+			<div class="notice_circle"><span class="update_circle_text">Update</span></div>
+			<div class="notice_title"><span class="notice_title_text">[운영] CMC_CONSENT_SIGN V_1.05 업데이트 안내</span></div> 
+			<div class="notice_date"><span class="notice_date_text">2019-10-02</span></div>
+		</div>
+		<div class="notice_full_text" style="display: none;">
+				<div style="margin-left: 5%;    padding-bottom: 5%;margin-top: 3%; "><span style="    line-height: 26px;">					[CMC_CONSENT_SIGN_V_1.05  업데이트 안내]
+			<br> 
+			<br>
+			&nbsp;안녕하세요. 아름누리메디컴입니다.
+			<br>
+			&nbsp;버전 업그레이드 및 업데이트 진행 내역 안내입니다.<br>
+			<br>
+			[현 버전] <br>&nbsp; V_1.04<br> 
+			<br>
+			[업데이트 버전] <br>&nbsp; V_1.05<br> 
+			<br> 
+			[업데이트 및 수정 내역]<br>
+			&nbsp;1. 임시저장은 가능하나, 인증저장이 진행되지 않던 문제가 해결되었습니다.
+			<br>   
+			감사합니다.  
+			<br></span>
+			</div>
+		</div>
+		<div class = "notice_box" >
+			<div class="notice_circle"><span class="update_circle_text">Update</span></div>
+			<div class="notice_title"><span class="notice_title_text">[운영] CMC_CONSENT_SIGN V_1.04 업데이트 안내</span></div> 
+			<div class="notice_date"><span class="notice_date_text">2019-10-02</span></div>
+		</div>
+		<div class="notice_full_text" style="display: none;">
+				<div style="margin-left: 5%;    padding-bottom: 5%;margin-top: 3%; "><span style="    line-height: 26px;">					[CMC_CONSENT_SIGN_V_1.04  업데이트 안내]
+			<br> 
+			<br>
+			&nbsp;안녕하세요. 아름누리메디컴입니다.
+			<br>
+			&nbsp;버전 업그레이드 및 업데이트 진행 내역 안내입니다.<br>
+			<br>
+			[현 버전] <br>&nbsp; V_1.03<br> 
+			<br>
+			[업데이트 버전] <br>&nbsp; V_1.04<br> 
+			<br> 
+			[업데이트 및 수정 내역]<br>
+			&nbsp;1. 안정화 작업이 진행되었습니다.
+			<br>     
+			감사합니다.  
+			<br></span>
+			</div>
+		</div>
+		<div class = "notice_box">
+			<div class="notice_circle"><span class="update_circle_text">Update</span></div>
+			<div class="notice_title"><span class="notice_title_text">[운영] CMC_CONSENT_SIGN V_1.03 업데이트 안내</span></div> 
+			<div class="notice_date"><span class="notice_date_text">2019-10-01</span></div>
+		</div>
+		<div class="notice_full_text" style="display: none;">
+				<div style="margin-left: 5%;    padding-bottom: 5%;margin-top: 3%; "><span style="    line-height: 26px;">					[CMC_CONSENT_SIGN_V_1.03  업데이트 안내]
+			<br> 
+			<br>
+			&nbsp;안녕하세요. 아름누리메디컴입니다.
+			<br>
+			&nbsp;버전 업그레이드 및 업데이트 진행 내역 안내입니다.<br>  
+			
+			<br>
+			[현 버전] <br>&nbsp; V_1.01<br> 
+			<br>
+			[업데이트 버전] <br>&nbsp; V_1.03<br> 
+			<br> 
+			[업데이트 및 수정 내역]<br>
+			  
+			&nbsp;1. 디바이스 시간이 일치하지 않을 경우 앱이 종료됩니다.<br>      
+			<br>
+			감사합니다.  
+			<br></span>
+			</div>
+		</div>
+		<div class = "notice_box" >
+				<div class="notice_circle"><span class="update_circle_text">Update</span></div>
+				<div class="notice_title"><span class="notice_title_text">[운영] CMC_CONSENT_SIGN V_1.01 업데이트 안내</span></div> 
+				<div class="notice_date"><span class="notice_date_text">2019-10-01</span></div>
+			</div>
+			<div class="notice_full_text" style="display: none;">
+					<div style="margin-left: 5%;    padding-bottom: 5%;margin-top: 3%; "><span style="    line-height: 26px;">					[CMC_CONSENT_SIGN_V_1.01  업데이트 안내]
+				<br> 
+				<br>
+				&nbsp;안녕하세요. 아름누리메디컴입니다.
+				<br>
+				&nbsp;버전 업그레이드 및 업데이트 진행 내역 안내입니다.<br>  
+				
+				<br>
+				[현 버전] <br>&nbsp; V_1.00<br> 
+				<br>
+				[업데이트 버전] <br>&nbsp; V_1.01<br> 
+				<br> 
+				[업데이트 및 수정 내역]<br>
+				  
+				&nbsp;1. 비밀번호에 특수문자가 들어갈 경우 로그인이 되지 않는 문제가 해결되었습니다.<br> 
+				&nbsp;2. 임시저장 후 인증저장이 진행되지 않던 오류가 해결되었습니다.<br>     
+				<br>
+				감사합니다.  <br></span>
+				</div>
+			</div>
+		<div class = "notice_box" >
+				<div class="notice_circle"><span class="update_circle_text">Update</span></div>
+				<div class="notice_title"><span class="notice_title_text">[운영] CMC_CONSENT_SIGN V_1.0 운영 배포 안내</span></div> 
+				<div class="notice_date"><span class="notice_date_text">2019-10-01</span></div>
+			</div>
+			<div class="notice_full_text" style="display: none;">
+					<div style="margin-left: 5%;    padding-bottom: 5%;margin-top: 3%; "><span style="    line-height: 26px;">					[CMC_CONSENT_SIGN_V_1.0  배포 안내]
+				<br> 
+				<br>
+				&nbsp;안녕하세요. 아름누리메디컴입니다.
+				<br>
+				&nbsp;운영 오픈 및 버전 안내입니다.<br>  
+				<br>
+				[업데이트 버전] 
+				<br><br>&nbsp; 운영 : V_1.0<br> 
+				<br> 
+				[안내사항]<br><br>
+				  
+				&nbsp;1. 로그인 화면 접근 시 퀵 가이드가 자동 실행됩니다. 이 기능은 추후 삭제될 예정입니다.<br>
+				&nbsp;2. 로그인 화면 물음표, 책모양 아이콘을 클릭시 퀵가이드, 메뉴얼이 실행됩니다.<br> 
+				&nbsp;3. 메인화면에서 좌측 하단의 물음표 버튼을 누르면 메뉴얼이 실행됩니다.<br>
+				&nbsp;4. 오류발생 및 질문은 내선번호 3713입니다. <br>  
+				&nbsp;5. CMC Talk 최윤수로 검색하시고 톡으로 문의주셔도 됩니다.<br>   
+				&nbsp;6. 앱이 업데이트가 자동적으로 실행됩니다. 업데이트 팝업이 뜨게되면 실행 부탁드립니다.<br>     
+				<br>
+				감사합니다.  <br></span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="wrap">
+	 		<h1>MOBILE CONSENT SYSTEM 전자동의시스템</h1>
+		<div id='hospital_image'><img src="../../images/hospital_image.jpg" style="    width: 100%;
+			height: 100%;
+			position: initial;
+			opacity: 0.3;" id="hospital_images" alt=""></div>
+		<div class="box2-1" id="plzLogo"></div>
+		<div class="login_section">
+			<div class="login_box login_id_box">
+				<span><input type="text" id="_loginId" class="input_id" tabindex="1" placeholder="ID"
+						onChange="javascript:this.value=this.value.toUpperCase();" /></span>
+				<!-- 5개 이후 자동 스크롤 -->
+				<div id="_latelyList" class="login_id_list">
+					<ul></ul>
+				</div>
+			</div>
+			<div class="login_box login_pw_box">
+				<span><input type="password" id="_loginPw" class="input_pw" tabindex="2" placeholder="PW" /></span>
+			</div>
+			<div class="login_btn_box">
+				<button type="button" id="_btnLogin" class="btn-login1">
+					<span style="margin-top: 14%; margin-left: -20%; position: absolute;"> LOGIN</span>
+				</button>
+				<button type="button" style="display: none;" id="_btnLoginSign" class="btn-login">
+					<span style="margin-top: 14%; margin-left: -25%; position: absolute;">인증로그인</span>
+				</button>
+			</div>
+		</div> 
+		<div class="choice_Dept" style="display: none;">
+			<span id="_userDeptChoice_txt"></span>
+			<select id="_userDeptChoice">
+				<option value="" >과 선택</option>
+			</select> 
+			<div id="deptChoice_btn">
+				<button class="btn-login1 deptChoice_enter">선택</button>
+				<button class="btn-login1 deptChoice_close">취소</button>
+			</div>
+		</div>
+		<div id="loading_bar" style="display:none;"><img id="loading_img" src="../../images/loading.gif" alt=""></div>
+		
+<div id="bcTarget1" style="margin-top:30px;"></div>
+ 
+		<div id = "uuidQrCord">
+
+		</div>
+		<!-- 전자동의서 Version -->
+		<div class="version_section">
+			<dl>
+				<dt>전자동의서 Version :</dt>
+				<dd id="_consentVersion">EPH_EDU_V1.0.01</dd>
+			</dl>
+			<dl>
+				<dt>e-Form Version :</dt>
+				<dd id="_eformVersion">2.5.124</dd>
+			</dl>
+			<dl>
+				<dt></dt>
+				<dd id="_interfaceType"></dd>
+			</dl>
+			<dl style='display:none;'>
+				<dt>Device Info : </dt>
+				<dd id="_DeviceUUID"></dd>
+			</dl> 
+		</div>
+
+		<!-- 업데이트 버튼 -->
+		<div id="_btnUpdate" class="update_section" style="display: none;">
+			<button type="button" id="_btnUpdateEfrom" class="btn-eform" style="display: none;">
+				<span>이폼</span>
+			</button>
+			<button type="button" id="_btnUpdateConsent" class="btn-agree" style="display: none;">
+				<span>전자동의서</span>
+			</button>
+		</div>
+
+		<!-- copyright -->
+		<p class="copyright">Copyright, All Rights Reserved.</p>
+
+		<!-- 닫기버튼 -->
+		<button type="button" id="_btnClose" class="btn-close">
+			<span>LOGIN</span>
+		</button>
+		<div class="dimmed"></div>
+
+		<script type="text/javascript" src="../../js/header.js"></script>
+		<script type="text/javascript" src="../../js/jquery-barcode.js"></script>
+		<script type="text/javascript" src="../../js/qrcode.js"></script>
+		<script type="text/javascript" src="../../js/pdf.js"></script>
+		<script type="text/javascript" src="../../js/plugin.js"></script>
+		<script type="text/javascript" src="../../js/pdfobject.js"></script>
+		<script type="text/javascript" src="js/login.js"></script>
+	</div>
+</body>
+
+</html>
