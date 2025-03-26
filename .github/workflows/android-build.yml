@@ -25,12 +25,9 @@ jobs:
         build-tools-version: '25.0.3'
         platform: 'android-29'
         
-    - name: Install Ant
+    - name: Build with Gradle
       run: |
-        choco install ant -y
-        
-    - name: Build with Ant
-      run: ant release
+        cmd /c "gradlew.bat assembleRelease"
       env:
         ANDROID_HOME: ${{ env.ANDROID_HOME }}
         ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
@@ -39,11 +36,11 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: app-release
-        path: bin/*-release.apk
+        path: app/build/outputs/apk/release/app-release.apk
         
     - name: Run Lint
       run: |
-        $env:ANDROID_HOME/tools/bin/lint --config lint.xml .
+        cmd /c "gradlew.bat lint"
       env:
         ANDROID_HOME: ${{ env.ANDROID_HOME }}
         ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }} 
