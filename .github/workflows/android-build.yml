@@ -29,22 +29,45 @@ jobs:
       run: |
         choco install ant -y
         
-    - name: Download Android Ant Build Script
+    - name: Create Android Ant Build Script
       run: |
         mkdir -p android-ant
-        curl -L https://raw.githubusercontent.com/android/platform_sdk_base/master/tools/ant/build.xml -o android-ant/build.xml
+        echo "<?xml version='1.0' encoding='UTF-8'?>" > android-ant/build.xml
+        echo "<project name='android' default='help'>" >> android-ant/build.xml
+        echo "  <property name='sdk.dir' value='$env:ANDROID_HOME'/>" >> android-ant/build.xml
+        echo "  <property name='target' value='android-29'/>" >> android-ant/build.xml
+        echo "  <property name='buildtools.version' value='25.0.3'/>" >> android-ant/build.xml
+        echo "  <property name='key.store' value='keystore/umkey'/>" >> android-ant/build.xml
+        echo "  <property name='key.alias' value='umkey'/>" >> android-ant/build.xml
+        echo "  <property name='key.store.password' value='${{ secrets.KEY_STORE_PASSWORD }}'/>" >> android-ant/build.xml
+        echo "  <property name='key.alias.password' value='${{ secrets.KEY_ALIAS_PASSWORD }}'/>" >> android-ant/build.xml
+        echo "  <taskdef name='aapt' classname='com.android.ant.AaptTask' classpath='$env:ANDROID_HOME/tools/lib/ant-tasks.jar'/>" >> android-ant/build.xml
+        echo "  <taskdef name='aidl' classname='com.android.ant.AidlTask' classpath='$env:ANDROID_HOME/tools/lib/ant-tasks.jar'/>" >> android-ant/build.xml
+        echo "  <taskdef name='apkbuilder' classname='com.android.ant.ApkBuilderTask' classpath='$env:ANDROID_HOME/tools/lib/ant-tasks.jar'/>" >> android-ant/build.xml
+        echo "  <taskdef name='dx' classname='com.android.ant.DxTask' classpath='$env:ANDROID_HOME/tools/lib/ant-tasks.jar'/>" >> android-ant/build.xml
+        echo "  <taskdef name='javac' classname='com.android.ant.JavacTask' classpath='$env:ANDROID_HOME/tools/lib/ant-tasks.jar'/>" >> android-ant/build.xml
+        echo "  <taskdef name='zipalign' classname='com.android.ant.ZipAlignTask' classpath='$env:ANDROID_HOME/tools/lib/ant-tasks.jar'/>" >> android-ant/build.xml
+        echo "  <target name='help'>" >> android-ant/build.xml
+        echo "    <echo>Available targets:</echo>" >> android-ant/build.xml
+        echo "    <echo>  release: Build release APK</echo>" >> android-ant/build.xml
+        echo "  </target>" >> android-ant/build.xml
+        echo "  <target name='release'>" >> android-ant/build.xml
+        echo "    <mkdir dir='bin'/>" >> android-ant/build.xml
+        echo "    <javac srcdir='src' destdir='bin' includeantruntime='false'/>" >> android-ant/build.xml
+        echo "    <dx input='bin' output='bin/classes.dex'/>" >> android-ant/build.xml
+        echo "    <aapt executable='$env:ANDROID_HOME/build-tools/25.0.3/aapt.exe' command='package' versioncode='1' debug='false' manifest='AndroidManifest.xml' assets='assets' res='res' out='bin/resources.ap_'/>" >> android-ant/build.xml
+        echo "    <apkbuilder outfile='bin/app-release.apk' signed='true' signedjar='bin/app-release-signed.apk' keystore='keystore/umkey' storepass='${{ secrets.KEY_STORE_PASSWORD }}' alias='umkey' keypass='${{ secrets.KEY_ALIAS_PASSWORD }}'>" >> android-ant/build.xml
+        echo "      <sourcefolder path='bin/classes.dex'/>" >> android-ant/build.xml
+        echo "      <sourcefolder path='bin/resources.ap_'/>" >> android-ant/build.xml
+        echo "    </apkbuilder>" >> android-ant/build.xml
+        echo "    <zipalign in='bin/app-release-signed.apk' out='bin/app-release.apk'/>" >> android-ant/build.xml
+        echo "  </target>" >> android-ant/build.xml
+        echo "</project>" >> android-ant/build.xml
         
     - name: Create build.xml
       run: |
         echo "<?xml version='1.0' encoding='UTF-8'?>" > build.xml
         echo "<project name='HCH_MOBILE_CONSENT_STG' default='help'>" >> build.xml
-        echo "  <property name='sdk.dir' value='$env:ANDROID_HOME'/>" >> build.xml
-        echo "  <property name='target' value='android-29'/>" >> build.xml
-        echo "  <property name='buildtools.version' value='25.0.3'/>" >> build.xml
-        echo "  <property name='key.store' value='keystore/umkey'/>" >> build.xml
-        echo "  <property name='key.alias' value='umkey'/>" >> build.xml
-        echo "  <property name='key.store.password' value='${{ secrets.KEY_STORE_PASSWORD }}'/>" >> build.xml
-        echo "  <property name='key.alias.password' value='${{ secrets.KEY_ALIAS_PASSWORD }}'/>" >> build.xml
         echo "  <import file='android-ant/build.xml'/>" >> build.xml
         echo "</project>" >> build.xml
         
@@ -74,7 +97,7 @@ jobs:
       with:
         payload: |
           {
-            "text": "${{ job.status == 'success' && '✅' || '❌' }} Android 앱 빌드\n성공 유무: ${{ job.status }}\nOS: Windows\n저장소: ${{ github.repository }}\n브랜치: ${{ github.ref }}\n\n아티팩트 다운로드: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            "text": "${{ job.status == 'success' && '✅' || '❌' }} Android CI 빌드 결과\n• 성공 유무: ${{ job.status }}\n• 저장소: ${{ github.repository }}\n• 브랜치: ${{ github.ref_name }}\n\n빌드된 APK 다운로드 링크\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           }
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
