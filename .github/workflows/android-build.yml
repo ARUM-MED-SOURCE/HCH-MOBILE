@@ -45,8 +45,8 @@ jobs:
         echo "<project basedir='.' default='build' name='HCH_MOBILE_CONSENT_STG'>" >> build.xml
         echo "    <property environment='env'/>" >> build.xml
         echo "    <property name='debuglevel' value='source,lines,vars'/>" >> build.xml
-        echo "    <property name='target' value='1.7'/>" >> build.xml
-        echo "    <property name='source' value='1.7'/>" >> build.xml
+        echo "    <property name='target' value='1.8'/>" >> build.xml
+        echo "    <property name='source' value='1.8'/>" >> build.xml
         echo "    <property name='key.store' value='keystore/umkey'/>" >> build.xml
         echo "    <property name='key.alias' value='alias'/>" >> build.xml
         echo "    <property name='key.store.password' value='${{ secrets.KEY_STORE_PASSWORD }}'/>" >> build.xml
