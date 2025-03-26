@@ -31,8 +31,8 @@ jobs:
         
     - name: Create required directories
       run: |
-        mkdir gen
-        mkdir -p bin/classes
+        if (-not (Test-Path gen)) { New-Item -ItemType Directory -Path gen }
+        if (-not (Test-Path bin/classes)) { New-Item -ItemType Directory -Path bin/classes -Force }
         
     - name: Create build.xml
       run: |
