@@ -25,100 +25,42 @@ jobs:
         build-tools-version: '25.0.3'
         platform: 'android-29'
         
-    - name: Create local.properties
+    - name: Install Ant
       run: |
-        echo "sdk.dir=$env:ANDROID_HOME" > local.properties
+        choco install ant -y
         
-    - name: Create gradle.properties
+    - name: Create build.xml
       run: |
-        echo "org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8" > gradle.properties
-        echo "android.useAndroidX=true" >> gradle.properties
-        echo "android.enableJetifier=true" >> gradle.properties
+        echo "<?xml version='1.0' encoding='UTF-8'?>" > build.xml
+        echo "<project name='HCH_MOBILE_CONSENT_STG' default='help'>" >> build.xml
+        echo "  <property name='sdk.dir' value='$env:ANDROID_HOME'/>" >> build.xml
+        echo "  <property name='target' value='android-29'/>" >> build.xml
+        echo "  <property name='buildtools.version' value='25.0.3'/>" >> build.xml
+        echo "  <property name='key.store' value='keystore/umkey'/>" >> build.xml
+        echo "  <property name='key.alias' value='umkey'/>" >> build.xml
+        echo "  <property name='key.store.password' value='${{ secrets.KEY_STORE_PASSWORD }}'/>" >> build.xml
+        echo "  <property name='key.alias.password' value='${{ secrets.KEY_ALIAS_PASSWORD }}'/>" >> build.xml
+        echo "  <import file='$env:ANDROID_HOME/tools/ant/build.xml'/>" >> build.xml
+        echo "  <target name='help'>" >> build.xml
+        echo "    <echo>Available targets:</echo>" >> build.xml
+        echo "    <echo>  release: Build release APK</echo>" >> build.xml
+        echo "  </target>" >> build.xml
+        echo "  <target name='release'>" >> build.xml
+        echo "    <mkdir dir='bin'/>" >> build.xml
+        echo "    <javac srcdir='src' destdir='bin' includeantruntime='false'/>" >> build.xml
+        echo "    <dx input='bin' output='bin/classes.dex'/>" >> build.xml
+        echo "    <aapt executable='$env:ANDROID_HOME/build-tools/25.0.3/aapt.exe' command='package' versioncode='1' debug='false' manifest='AndroidManifest.xml' assets='assets' res='res' out='bin/resources.ap_'/>" >> build.xml
+        echo "    <apkbuilder outfile='bin/app-release.apk' signed='true' signedjar='bin/app-release-signed.apk' keystore='keystore/umkey' storepass='${{ secrets.KEY_STORE_PASSWORD }}' alias='umkey' keypass='${{ secrets.KEY_ALIAS_PASSWORD }}'>" >> build.xml
+        echo "      <sourcefolder path='bin/classes.dex'/>" >> build.xml
+        echo "      <sourcefolder path='bin/resources.ap_'/>" >> build.xml
+        echo "    </apkbuilder>" >> build.xml
+        echo "    <zipalign in='bin/app-release-signed.apk' out='bin/app-release.apk'/>" >> build.xml
+        echo "  </target>" >> build.xml
+        echo "</project>" >> build.xml
         
-    - name: Create build.gradle
+    - name: Build with Ant
       run: |
-        echo "buildscript {" > build.gradle
-        echo "  repositories {" >> build.gradle
-        echo "    google()" >> build.gradle
-        echo "    mavenCentral()" >> build.gradle
-        echo "  }" >> build.gradle
-        echo "  dependencies {" >> build.gradle
-        echo "    classpath 'com.android.tools.build:gradle:7.0.4'" >> build.gradle
-        echo "  }" >> build.gradle
-        echo "}" >> build.gradle
-        echo "" >> build.gradle
-        echo "allprojects {" >> build.gradle
-        echo "  repositories {" >> build.gradle
-        echo "    google()" >> build.gradle
-        echo "    mavenCentral()" >> build.gradle
-        echo "  }" >> build.gradle
-        echo "}" >> build.gradle
-        
-    - name: Create app/build.gradle
-      run: |
-        mkdir -p app
-        echo "apply plugin: 'com.android.application'" > app/build.gradle
-        echo "" >> app/build.gradle
-        echo "android {" >> app/build.gradle
-        echo "  compileSdkVersion 29" >> app/build.gradle
-        echo "  buildToolsVersion '30.0.2'" >> app/build.gradle
-        echo "" >> app/build.gradle
-        echo "  defaultConfig {" >> app/build.gradle
-        echo "    applicationId 'com.hch.mobile'" >> app/build.gradle
-        echo "    minSdkVersion 21" >> app/build.gradle
-        echo "    targetSdkVersion 29" >> app/build.gradle
-        echo "    versionCode 1" >> app/build.gradle
-        echo "    versionName '1.0'" >> app/build.gradle
-        echo "  }" >> app/build.gradle
-        echo "" >> app/build.gradle
-        echo "  signingConfigs {" >> app/build.gradle
-        echo "    release {" >> app/build.gradle
-        echo "      storeFile file('../keystore/umkey')" >> app/build.gradle
-        echo "      storePassword '${{ secrets.KEY_STORE_PASSWORD }}'" >> app/build.gradle
-        echo "      keyAlias 'umkey'" >> app/build.gradle
-        echo "      keyPassword '${{ secrets.KEY_ALIAS_PASSWORD }}'" >> app/build.gradle
-        echo "    }" >> app/build.gradle
-        echo "  }" >> app/build.gradle
-        echo "" >> app/build.gradle
-        echo "  buildTypes {" >> app/build.gradle
-        echo "    release {" >> app/build.gradle
-        echo "      minifyEnabled false" >> app/build.gradle
-        echo "      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'" >> app/build.gradle
-        echo "      signingConfig signingConfigs.release" >> app/build.gradle
-        echo "    }" >> app/build.gradle
-        echo "  }" >> app/build.gradle
-        echo "" >> app/build.gradle
-        echo "  sourceSets {" >> app/build.gradle
-        echo "    main {" >> app/build.gradle
-        echo "      manifest.srcFile 'src/main/AndroidManifest.xml'" >> app/build.gradle
-        echo "      java.srcDirs = ['src/main/java']" >> app/build.gradle
-        echo "      res.srcDirs = ['src/main/res']" >> app/build.gradle
-        echo "      assets.srcDirs = ['src/main/assets']" >> app/build.gradle
-        echo "    }" >> app/build.gradle
-        echo "  }" >> app/build.gradle
-        echo "}" >> app/build.gradle
-        
-    - name: Move source files to Gradle structure
-      run: |
-        mkdir -p app/src/main/java
-        mkdir -p app/src/main/res
-        mkdir -p app/src/main/assets
-        cp -r src/* app/src/main/java/
-        cp -r res/* app/src/main/res/
-        cp -r assets/* app/src/main/assets/
-        cp AndroidManifest.xml app/src/main/
-        
-    - name: Create settings.gradle
-      run: |
-        echo "include ':app'" > settings.gradle
-        
-    - name: Create gradle wrapper
-      run: |
-        gradle wrapper
-        
-    - name: Build with Gradle
-      run: |
-        ./gradlew assembleRelease
+        cmd /c "ant release"
       env:
         ANDROID_HOME: ${{ env.ANDROID_HOME }}
         ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
@@ -127,11 +69,11 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: app-release
-        path: app/build/outputs/apk/release/*-release.apk
+        path: bin/*-release.apk
         
     - name: Run Lint
       run: |
-        ./gradlew lint
+        cmd /c "$env:ANDROID_HOME\tools\bin\lint --config lint.xml ."
       env:
         ANDROID_HOME: ${{ env.ANDROID_HOME }}
         ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
