@@ -1,5 +1,4 @@
 // GENERATED FILE - DO NOT EDIT
+rootProject.name = 'HCH_MOBILE_CONSENT_STG'
 include ':app'
 include ':CordovaLib'
-
-rootProject.name = 'HCH_MOBILE_CONSENT_STG'

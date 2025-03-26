@@ -49,35 +49,35 @@ ext {
     apply from: 'CordovaLib/cordova.gradle'
     // The value for android.compileSdkVersion.
     if (!project.hasProperty('cdvCompileSdkVersion')) {
-        cdvCompileSdkVersion = null;
+        cdvCompileSdkVersion = 29;
     }
     // The value for android.buildToolsVersion.
     if (!project.hasProperty('cdvBuildToolsVersion')) {
-        cdvBuildToolsVersion = null;
+        cdvBuildToolsVersion = "29.0.3";
     }
     // Sets the versionCode to the given value.
     if (!project.hasProperty('cdvVersionCode')) {
-        cdvVersionCode = null
+        cdvVersionCode = 1;
     }
     // Sets the minSdkVersion to the given value.
     if (!project.hasProperty('cdvMinSdkVersion')) {
-        cdvMinSdkVersion = null
+        cdvMinSdkVersion = 19;
     }
     // Whether to build architecture-specific APKs.
     if (!project.hasProperty('cdvBuildMultipleApks')) {
-        cdvBuildMultipleApks = null
+        cdvBuildMultipleApks = false;
     }
     // .properties files to use for release signing.
     if (!project.hasProperty('cdvReleaseSigningPropertiesFile')) {
-        cdvReleaseSigningPropertiesFile = null
+        cdvReleaseSigningPropertiesFile = null;
     }
     // .properties files to use for debug signing.
     if (!project.hasProperty('cdvDebugSigningPropertiesFile')) {
-        cdvDebugSigningPropertiesFile = null
+        cdvDebugSigningPropertiesFile = null;
     }
     // Set by build.js script.
     if (!project.hasProperty('cdvBuildArch')) {
-        cdvBuildArch = null
+        cdvBuildArch = null;
     }
 
     // Plugin gradle extensions can append to this to have code run at the end.
@@ -90,20 +90,6 @@ ext {
 def hasBuildExtras = file('build-extras.gradle').exists()
 if (hasBuildExtras) {
     apply from: 'build-extras.gradle'
-}
-
-// Set property defaults after extension .gradle files.
-if (ext.cdvCompileSdkVersion == null) {
-    ext.cdvCompileSdkVersion = privateHelpers.getProjectTarget()
-}
-if (ext.cdvBuildToolsVersion == null) {
-    ext.cdvBuildToolsVersion = privateHelpers.findLatestInstalledBuildTools()
-}
-if (ext.cdvDebugSigningPropertiesFile == null && file('debug-signing.properties').exists()) {
-    ext.cdvDebugSigningPropertiesFile = 'debug-signing.properties'
-}
-if (ext.cdvReleaseSigningPropertiesFile == null && file('release-signing.properties').exists()) {
-    ext.cdvReleaseSigningPropertiesFile = 'release-signing.properties'
 }
 
 // Cast to appropriate types.
@@ -131,18 +117,20 @@ cdvBuildRelease.dependsOn {
     return computeBuildTargetName(false)
 }
 
-task cdvPrintProps << {
-    println('cdvCompileSdkVersion=' + cdvCompileSdkVersion)
-    println('cdvBuildToolsVersion=' + cdvBuildToolsVersion)
-    println('cdvVersionCode=' + cdvVersionCode)
-    println('cdvMinSdkVersion=' + cdvMinSdkVersion)
-    println('cdvBuildMultipleApks=' + cdvBuildMultipleApks)
-    println('cdvReleaseSigningPropertiesFile=' + cdvReleaseSigningPropertiesFile)
-    println('cdvDebugSigningPropertiesFile=' + cdvDebugSigningPropertiesFile)
-    println('cdvBuildArch=' + cdvBuildArch)
-    println('computedVersionCode=' + android.defaultConfig.versionCode)
-    android.productFlavors.each { flavor ->
-        println('computed' + flavor.name.capitalize() + 'VersionCode=' + flavor.versionCode)
+task cdvPrintProps {
+    doLast {
+        println('cdvCompileSdkVersion=' + cdvCompileSdkVersion)
+        println('cdvBuildToolsVersion=' + cdvBuildToolsVersion)
+        println('cdvVersionCode=' + cdvVersionCode)
+        println('cdvMinSdkVersion=' + cdvMinSdkVersion)
+        println('cdvBuildMultipleApks=' + cdvBuildMultipleApks)
+        println('cdvReleaseSigningPropertiesFile=' + cdvReleaseSigningPropertiesFile)
+        println('cdvDebugSigningPropertiesFile=' + cdvDebugSigningPropertiesFile)
+        println('cdvBuildArch=' + cdvBuildArch)
+        println('computedVersionCode=' + android.defaultConfig.versionCode)
+        android.productFlavors.each { flavor ->
+            println('computed' + flavor.name.capitalize() + 'VersionCode=' + flavor.versionCode)
+        }
     }
 }
 
@@ -152,9 +140,9 @@ android {
 
     defaultConfig {
         applicationId "kr.co.clipsoft.hchmobileconsent"
-        minSdkVersion cdvMinSdkVersion ?: 19
+        minSdkVersion cdvMinSdkVersion
         targetSdkVersion cdvCompileSdkVersion
-        versionCode cdvVersionCode ?: 1
+        versionCode cdvVersionCode
         versionName "1.0"
     }
 
