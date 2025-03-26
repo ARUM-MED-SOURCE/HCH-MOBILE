@@ -18,14 +18,6 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '16'
-        
-    - name: Install Cordova
-      run: npm install -g cordova
-        
     - name: Install Android SDK
       uses: android-actions/setup-android@v2
       with:
@@ -33,24 +25,23 @@ jobs:
         build-tools-version: '33.0.0'
         platform: 'android-33'
         
-    - name: Install project dependencies
-      run: |
-        npm install
-        cordova prepare
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
         
-    - name: Build Android APK
-      run: |
-        cordova build android --release
-        cd platforms/android/app/build/outputs/apk/release
-        echo "APK_PATH=$(pwd)/app-release.apk" >> $GITHUB_ENV
+    - name: Build with Gradle
+      run: ./gradlew assembleRelease
+      env:
+        ANDROID_HOME: ${{ env.ANDROID_HOME }}
+        ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
         
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: app-release
-        path: ${{ env.APK_PATH }}
+        path: app/build/outputs/apk/release/app-release.apk
         
     - name: Run Lint
-      run: |
-        cd platforms/android
-        ./gradlew lint 
+      run: ./gradlew lint
+      env:
+        ANDROID_HOME: ${{ env.ANDROID_HOME }}
+        ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }} 
