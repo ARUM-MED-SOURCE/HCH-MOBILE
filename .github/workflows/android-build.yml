@@ -25,55 +25,81 @@ jobs:
         build-tools-version: '25.0.3'
         platform: 'android-29'
         
-    - name: Install Ant
+    - name: Create local.properties
       run: |
-        choco install ant -y
+        echo "sdk.dir=$env:ANDROID_HOME" > local.properties
         
-    - name: Create Android Ant Build Script
+    - name: Create gradle.properties
       run: |
-        mkdir -p android-ant
-        echo "<?xml version='1.0' encoding='UTF-8'?>" > android-ant/build.xml
-        echo "<project name='android' default='help'>" >> android-ant/build.xml
-        echo "  <property name='sdk.dir' value='$env:ANDROID_HOME'/>" >> android-ant/build.xml
-        echo "  <property name='target' value='android-29'/>" >> android-ant/build.xml
-        echo "  <property name='buildtools.version' value='25.0.3'/>" >> android-ant/build.xml
-        echo "  <property name='key.store' value='keystore/umkey'/>" >> android-ant/build.xml
-        echo "  <property name='key.alias' value='alias'/>" >> android-ant/build.xml
-        echo "  <property name='key.store.password' value='${{ secrets.KEY_STORE_PASSWORD }}'/>" >> android-ant/build.xml
-        echo "  <property name='key.alias.password' value='${{ secrets.KEY_STORE_PASSWORD }}'/>" >> android-ant/build.xml
-        echo "  <taskdef name='aapt' classname='com.android.ant.AaptTask' classpath='$env:ANDROID_HOME/cmdline-tools/latest/lib/ant-tasks.jar'/>" >> android-ant/build.xml
-        echo "  <taskdef name='aidl' classname='com.android.ant.AidlTask' classpath='$env:ANDROID_HOME/cmdline-tools/latest/lib/ant-tasks.jar'/>" >> android-ant/build.xml
-        echo "  <taskdef name='apkbuilder' classname='com.android.ant.ApkBuilderTask' classpath='$env:ANDROID_HOME/cmdline-tools/latest/lib/ant-tasks.jar'/>" >> android-ant/build.xml
-        echo "  <taskdef name='dx' classname='com.android.ant.DxTask' classpath='$env:ANDROID_HOME/cmdline-tools/latest/lib/ant-tasks.jar'/>" >> android-ant/build.xml
-        echo "  <taskdef name='javac' classname='com.android.ant.JavacTask' classpath='$env:ANDROID_HOME/cmdline-tools/latest/lib/ant-tasks.jar'/>" >> android-ant/build.xml
-        echo "  <taskdef name='zipalign' classname='com.android.ant.ZipAlignTask' classpath='$env:ANDROID_HOME/cmdline-tools/latest/lib/ant-tasks.jar'/>" >> android-ant/build.xml
-        echo "  <target name='help'>" >> android-ant/build.xml
-        echo "    <echo>Available targets:</echo>" >> android-ant/build.xml
-        echo "    <echo>  release: Build release APK</echo>" >> android-ant/build.xml
-        echo "  </target>" >> android-ant/build.xml
-        echo "  <target name='release'>" >> android-ant/build.xml
-        echo "    <mkdir dir='bin'/>" >> android-ant/build.xml
-        echo "    <javac srcdir='src' destdir='bin' includeantruntime='false'/>" >> android-ant/build.xml
-        echo "    <dx input='bin' output='bin/classes.dex'/>" >> android-ant/build.xml
-        echo "    <aapt executable='$env:ANDROID_HOME/build-tools/25.0.3/aapt.exe' command='package' versioncode='1' debug='false' manifest='AndroidManifest.xml' assets='assets' res='res' out='bin/resources.ap_'/>" >> android-ant/build.xml
-        echo "    <apkbuilder outfile='bin/app-release.apk' signed='true' signedjar='bin/app-release-signed.apk' keystore='keystore/umkey' storepass='${{ secrets.KEY_STORE_PASSWORD }}' alias='umkey' keypass='${{ secrets.KEY_ALIAS_PASSWORD }}'>" >> android-ant/build.xml
-        echo "      <sourcefolder path='bin/classes.dex'/>" >> android-ant/build.xml
-        echo "      <sourcefolder path='bin/resources.ap_'/>" >> android-ant/build.xml
-        echo "    </apkbuilder>" >> android-ant/build.xml
-        echo "    <zipalign in='bin/app-release-signed.apk' out='bin/app-release.apk'/>" >> android-ant/build.xml
-        echo "  </target>" >> android-ant/build.xml
-        echo "</project>" >> android-ant/build.xml
+        echo "org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8" > gradle.properties
+        echo "android.useAndroidX=true" >> gradle.properties
+        echo "android.enableJetifier=true" >> gradle.properties
         
-    - name: Create build.xml
+    - name: Create build.gradle
       run: |
-        echo "<?xml version='1.0' encoding='UTF-8'?>" > build.xml
-        echo "<project name='HCH_MOBILE_CONSENT_STG' default='help'>" >> build.xml
-        echo "  <import file='android-ant/build.xml'/>" >> build.xml
-        echo "</project>" >> build.xml
+        echo "buildscript {" > build.gradle
+        echo "  repositories {" >> build.gradle
+        echo "    google()" >> build.gradle
+        echo "    mavenCentral()" >> build.gradle
+        echo "  }" >> build.gradle
+        echo "  dependencies {" >> build.gradle
+        echo "    classpath 'com.android.tools.build:gradle:7.0.4'" >> build.gradle
+        echo "  }" >> build.gradle
+        echo "}" >> build.gradle
+        echo "" >> build.gradle
+        echo "allprojects {" >> build.gradle
+        echo "  repositories {" >> build.gradle
+        echo "    google()" >> build.gradle
+        echo "    mavenCentral()" >> build.gradle
+        echo "  }" >> build.gradle
+        echo "}" >> build.gradle
         
-    - name: Build with Ant
+    - name: Create app/build.gradle
       run: |
-        cmd /c "ant release"
+        mkdir -p app
+        echo "apply plugin: 'com.android.application'" > app/build.gradle
+        echo "" >> app/build.gradle
+        echo "android {" >> app/build.gradle
+        echo "  compileSdkVersion 29" >> app/build.gradle
+        echo "  buildToolsVersion '25.0.3'" >> app/build.gradle
+        echo "" >> app/build.gradle
+        echo "  defaultConfig {" >> app/build.gradle
+        echo "    applicationId 'com.hch.mobile'" >> app/build.gradle
+        echo "    minSdkVersion 21" >> app/build.gradle
+        echo "    targetSdkVersion 29" >> app/build.gradle
+        echo "    versionCode 1" >> app/build.gradle
+        echo "    versionName '1.0'" >> app/build.gradle
+        echo "  }" >> app/build.gradle
+        echo "" >> app/build.gradle
+        echo "  signingConfigs {" >> app/build.gradle
+        echo "    release {" >> app/build.gradle
+        echo "      storeFile file('../keystore/umkey')" >> app/build.gradle
+        echo "      storePassword '${{ secrets.KEY_STORE_PASSWORD }}'" >> app/build.gradle
+        echo "      keyAlias 'umkey'" >> app/build.gradle
+        echo "      keyPassword '${{ secrets.KEY_ALIAS_PASSWORD }}'" >> app/build.gradle
+        echo "    }" >> app/build.gradle
+        echo "  }" >> app/build.gradle
+        echo "" >> app/build.gradle
+        echo "  buildTypes {" >> app/build.gradle
+        echo "    release {" >> app/build.gradle
+        echo "      minifyEnabled false" >> app/build.gradle
+        echo "      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'" >> app/build.gradle
+        echo "      signingConfig signingConfigs.release" >> app/build.gradle
+        echo "    }" >> app/build.gradle
+        echo "  }" >> app/build.gradle
+        echo "}" >> app/build.gradle
+        
+    - name: Create settings.gradle
+      run: |
+        echo "include ':app'" > settings.gradle
+        
+    - name: Create gradle wrapper
+      run: |
+        gradle wrapper
+        
+    - name: Build with Gradle
+      run: |
+        ./gradlew assembleRelease
       env:
         ANDROID_HOME: ${{ env.ANDROID_HOME }}
         ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
@@ -82,11 +108,11 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: app-release
-        path: bin/*-release.apk
+        path: app/build/outputs/apk/release/*-release.apk
         
     - name: Run Lint
       run: |
-        cmd /c "$env:ANDROID_HOME\tools\bin\lint --config lint.xml ."
+        ./gradlew lint
       env:
         ANDROID_HOME: ${{ env.ANDROID_HOME }}
         ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
@@ -97,7 +123,7 @@ jobs:
       with:
         payload: |
           {
-            "text": "${{ job.status == 'success' && '✅' || '❌'}} Android CI 빌드 결과\n• 성공 유무: ${{ job.status }}\n• 저장소: ${{ github.repository }}\n• 브랜치: ${{ github.ref_name }}\n\n<${github.server_url}/${github.repository}/actions/runs/${github.run_id}|빌드된 APK 다운로드 링크>"
+            "text": "${{ job.status == 'success' && ':white_check_mark:' || ':x:' }} Android CI 빌드 결과\n• 성공 유무: ${{ job.status }}\n• 저장소: ${{ github.repository }}\n• 브랜치: ${{ github.ref_name }}\n\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|빌드된 APK 다운로드 링크>"
           }
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
