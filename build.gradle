@@ -19,18 +19,13 @@
 
 // GENERATED FILE! DO NOT EDIT!
 
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 
 buildscript {
     repositories {
         google()
         mavenCentral()
     }
-
-    // Switch the Android Gradle plugin version requirement depending on the
-    // installed version of Gradle. This dependency is documented at
-    // http://tools.android.com/tech-docs/new-build-system/version-compatibility
-    // and https://issues.apache.org/jira/browse/CB-8143
     dependencies {
         classpath 'com.android.tools.build:gradle:4.2.2'
     }
@@ -46,10 +41,6 @@ allprojects {
 // Allow plugins to declare Maven dependencies via build-extras.gradle.
 repositories {
     mavenCentral()
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.8'
 }
 
 // Configuration properties. Set these via environment variables, build-extras.gradle, or gradle.properties.
@@ -156,19 +147,15 @@ task cdvPrintProps << {
 }
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    compileSdkVersion cdvCompileSdkVersion
+    buildToolsVersion cdvBuildToolsVersion
 
     defaultConfig {
         applicationId "kr.co.clipsoft.hchmobileconsent"
-        minSdkVersion 19
-        targetSdkVersion 29
-        versionCode 1
+        minSdkVersion cdvMinSdkVersion ?: 19
+        targetSdkVersion cdvCompileSdkVersion
+        versionCode cdvVersionCode ?: 1
         versionName "1.0"
-
-        if (cdvMinSdkVersion != null) {
-            minSdkVersion cdvMinSdkVersion
-        }
     }
 
     lintOptions {
@@ -195,16 +182,6 @@ android {
                 }
             }
         }
-    } else if (!cdvVersionCode) {
-      def minSdkVersion = cdvMinSdkVersion ?: privateHelpers.extractIntFromManifest("minSdkVersion")
-      // Vary versionCode by the two most common API levels:
-      // 14 is ICS, which is the lowest API level for many apps.
-      // 20 is Lollipop, which is the lowest API level for the updatable system webview.
-      if (minSdkVersion >= 20) {
-        defaultConfig.versionCode += 9
-      } else if (minSdkVersion >= 14) {
-        defaultConfig.versionCode += 8
-      }
     }
 
     compileOptions {
