@@ -281,7 +281,3 @@ for (def func : cdvPluginPostBuildExtras) {
 if (hasProperty('postBuildExtras')) {
     postBuildExtras()
 }
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
