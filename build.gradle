@@ -156,22 +156,15 @@ task cdvPrintProps << {
 }
 
 android {
-    sourceSets {
-        main {
-            manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src']
-            resources.srcDirs = ['src']
-            aidl.srcDirs = ['src']
-            renderscript.srcDirs = ['src']
-            res.srcDirs = ['res']
-            assets.srcDirs = ['assets']
-            jniLibs.srcDirs = ['libs']
-        }
-    }
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
 
     defaultConfig {
-        versionCode cdvVersionCode ?: Integer.parseInt("" + privateHelpers.extractIntFromManifest("versionCode") + "0")
-        applicationId privateHelpers.extractStringFromManifest("package")
+        applicationId "kr.co.clipsoft.hchmobileconsent"
+        minSdkVersion 19
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
 
         if (cdvMinSdkVersion != null) {
             minSdkVersion cdvMinSdkVersion
@@ -181,9 +174,6 @@ android {
     lintOptions {
       abortOnError false;
     }
-
-    compileSdkVersion cdvCompileSdkVersion
-    buildToolsVersion cdvBuildToolsVersion
 
     if (Boolean.valueOf(cdvBuildMultipleApks)) {
         productFlavors {
@@ -218,8 +208,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_6
-        targetCompatibility JavaVersion.VERSION_1_6
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     if (cdvReleaseSigningPropertiesFile) {
@@ -234,6 +224,8 @@ android {
         }
         buildTypes {
             release {
+                minifyEnabled false
+                proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
                 signingConfig signingConfigs.release
             }
         }
@@ -242,14 +234,27 @@ android {
     if (cdvDebugSigningPropertiesFile) {
         addSigningProps(cdvDebugSigningPropertiesFile, signingConfigs.debug)
     }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            resources.srcDirs = ['src']
+            aidl.srcDirs = ['src']
+            renderscript.srcDirs = ['src']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+            jniLibs.srcDirs = ['libs']
+        }
+    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
-    // SUB-PROJECT DEPENDENCIES START
-    debugCompile project(path: "CordovaLib", configuration: "debug")
-    releaseCompile project(path: "CordovaLib", configuration: "release")
-    // SUB-PROJECT DEPENDENCIES END
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':CordovaLib')
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 }
 
 def promptForReleaseKeyPassword() {
