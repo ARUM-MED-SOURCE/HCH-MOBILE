@@ -21,15 +21,15 @@ jobs:
     - name: Install Android SDK
       uses: android-actions/setup-android@v2
       with:
-        api-level: 33
-        build-tools-version: '33.0.0'
-        platform: 'android-33'
+        api-level: 29
+        build-tools-version: '25.0.3'
+        platform: 'android-29'
         
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+    - name: Install Ant
+      run: sudo apt-get update && sudo apt-get install -y ant
         
-    - name: Build with Gradle
-      run: ./gradlew assembleRelease
+    - name: Build with Ant
+      run: ant release
       env:
         ANDROID_HOME: ${{ env.ANDROID_HOME }}
         ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
@@ -38,10 +38,11 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: app-release
-        path: app/build/outputs/apk/release/app-release.apk
+        path: bin/*-release.apk
         
     - name: Run Lint
-      run: ./gradlew lint
+      run: |
+        $ANDROID_HOME/tools/bin/lint --config lint.xml .
       env:
         ANDROID_HOME: ${{ env.ANDROID_HOME }}
         ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }} 
