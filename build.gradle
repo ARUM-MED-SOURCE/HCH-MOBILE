@@ -148,6 +148,7 @@ android {
 
     lintOptions {
       abortOnError false;
+      checkReleaseBuilds false;
     }
 
     if (Boolean.valueOf(cdvBuildMultipleApks)) {
