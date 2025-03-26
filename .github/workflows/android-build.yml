@@ -61,7 +61,7 @@ jobs:
         echo "" >> app/build.gradle
         echo "android {" >> app/build.gradle
         echo "  compileSdkVersion 29" >> app/build.gradle
-        echo "  buildToolsVersion '25.0.3'" >> app/build.gradle
+        echo "  buildToolsVersion '30.0.2'" >> app/build.gradle
         echo "" >> app/build.gradle
         echo "  defaultConfig {" >> app/build.gradle
         echo "    applicationId 'com.hch.mobile'" >> app/build.gradle
@@ -87,7 +87,26 @@ jobs:
         echo "      signingConfig signingConfigs.release" >> app/build.gradle
         echo "    }" >> app/build.gradle
         echo "  }" >> app/build.gradle
+        echo "" >> app/build.gradle
+        echo "  sourceSets {" >> app/build.gradle
+        echo "    main {" >> app/build.gradle
+        echo "      manifest.srcFile 'src/main/AndroidManifest.xml'" >> app/build.gradle
+        echo "      java.srcDirs = ['src/main/java']" >> app/build.gradle
+        echo "      res.srcDirs = ['src/main/res']" >> app/build.gradle
+        echo "      assets.srcDirs = ['src/main/assets']" >> app/build.gradle
+        echo "    }" >> app/build.gradle
+        echo "  }" >> app/build.gradle
         echo "}" >> app/build.gradle
+        
+    - name: Move source files to Gradle structure
+      run: |
+        mkdir -p app/src/main/java
+        mkdir -p app/src/main/res
+        mkdir -p app/src/main/assets
+        cp -r src/* app/src/main/java/
+        cp -r res/* app/src/main/res/
+        cp -r assets/* app/src/main/assets/
+        cp AndroidManifest.xml app/src/main/
         
     - name: Create settings.gradle
       run: |
