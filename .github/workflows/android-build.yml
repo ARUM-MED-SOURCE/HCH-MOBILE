@@ -53,6 +53,15 @@ jobs:
         echo "    <property name='key.alias.password' value='${{ secrets.KEY_STORE_PASSWORD }}'/>" >> build.xml
         echo "    <path id='Android 10.libraryclasspath'>" >> build.xml
         echo "        <pathelement location='$env:ANDROID_HOME/platforms/android-29/android.jar'/>" >> build.xml
+        echo "        <pathelement location='$env:ANDROID_HOME/platforms/android-29/data/res'/>" >> build.xml
+        echo "        <pathelement location='$env:ANDROID_HOME/platforms/android-29/data/layoutlib.jar'/>" >> build.xml
+        echo "        <pathelement location='$env:ANDROID_HOME/platforms/android-29/data/framework.jar'/>" >> build.xml
+        echo "        <pathelement location='$env:ANDROID_HOME/platforms/android-29/data/core.jar'/>" >> build.xml
+        echo "        <pathelement location='$env:ANDROID_HOME/platforms/android-29/data/ext.jar'/>" >> build.xml
+        echo "        <pathelement location='$env:ANDROID_HOME/platforms/android-29/data/okhttp.jar'/>" >> build.xml
+        echo "        <pathelement location='$env:ANDROID_HOME/platforms/android-29/data/conscrypt.jar'/>" >> build.xml
+        echo "        <pathelement location='$env:ANDROID_HOME/platforms/android-29/data/bouncycastle.jar'/>" >> build.xml
+        echo "        <pathelement location='$env:ANDROID_HOME/platforms/android-29/data/apache-xml.jar'/>" >> build.xml
         echo "    </path>" >> build.xml
         echo "    <path id='Android Private Libraries.libraryclasspath'>" >> build.xml
         echo "        <pathelement location='libs/json-simple-1.1.1 (1).jar'/>" >> build.xml
