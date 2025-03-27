@@ -40,10 +40,10 @@ public class PermissionHelper {
 
 	
 	private static final int PERMISSION_REQUEST_CODE = 0;
-	private static final String TAG = "PermissionHelper";
 	private static final String BASIC_PERMISSION_MESSAGE = "전자동의서를 사용하기 위해서는 해당 권한들이 필요합니다.\n[설정] -> [권한]으로 이동 후 허용해주시기 바랍니다.\n거부를 선택하시면 앱이 종료됩니다.";
 	private static final String NOTIFICATION_PERMISSION_MESSAGE = "신규 기기는 알림 권한이 필요합니다.\n[설정] -> [알림]으로 이동 후 허용해주시기 바랍니다.\n거부를 선택하시면 앱이 종료됩니다.";
-		
+	private static final String TAG = PermissionHelper.class.getSimpleName();
+
 	private final Context context;
 	private static boolean isShowingPermissionDialog = false;
 
