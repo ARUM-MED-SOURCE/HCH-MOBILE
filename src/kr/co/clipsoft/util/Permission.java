@@ -39,7 +39,6 @@ public enum Permission {
             ;
 
             private static final int ANDROID_TIRAMISU_SDK_VERSION = 33;
-            private static final String TAG = "Permission";
             
             private final String name;
             private final String displayName;
@@ -116,13 +115,13 @@ public enum Permission {
            
 
             private void logPermissionDenied() {
-                Log.i(TAG, String.format("[logPermissionDenied] %s 권한: %s",
+                Log.i(getClass().getSimpleName(), String.format("[logPermissionDenied] %s 권한: %s",
                     displayName,
                     "PERMISSION_DENIED"));
             }
 
             private void logPermissionGranted() {
-                Log.i(TAG, String.format("[logPermissionGranted] %s 권한: %s",
+                Log.i(getClass().getSimpleName(), String.format("[logPermissionGranted] %s 권한: %s",
                     displayName,
                     "PERMISSION_GRANTED"));
             }
