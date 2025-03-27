@@ -29,6 +29,7 @@ import static android.Manifest.permission.BROADCAST_STICKY;
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static kr.co.clipsoft.util.Permission.isOnlyNotificationPermissionDenied;
 import static kr.co.clipsoft.util.Permission.isPermissionAllGranted;
+import static kr.co.clipsoft.util.Permission.getDeniedPermissions;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static android.content.pm.PackageManager.PERMISSION_DENIED;
@@ -89,7 +90,7 @@ public class PermissionHelper {
 	}
 
 	public void showSystemPermissionsDialog() {
-		String[] deniedPermissions = Permission.getDeniedPermissions();
+		String[] deniedPermissions = getDeniedPermissions();
 
 		Log.i(TAG, String.format("[Permission Request] %s 권한 추가", Arrays.toString(deniedPermissions)));
 

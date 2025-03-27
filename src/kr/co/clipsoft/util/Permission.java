@@ -37,6 +37,8 @@ public enum Permission {
             ;
 
             private static final int ANDROID_TIRAMISU_SDK_VERSION = 33;
+            private static final String TAG = "Permission";
+            
             private final String name;
             private final String displayName;
             private int permissionGrantCode;
@@ -90,9 +92,9 @@ public enum Permission {
             }
 
             public static boolean isOnlyNotificationPermissionDenied() {
-               if(PERMiSSION_POST_NOTIFICATIONS.permissionGrantCode == PERMISSION_DENIED) {
+               if(PERMISSION_POST_NOTIFICATIONS.permissionGrantCode == PERMISSION_DENIED) {
                     for (Permission permission : values()) {
-                        if (permission.name.equals(PERMiSSION_POST_NOTIFICATIONS.name)) {
+                        if (permission.name.equals(PERMISSION_POST_NOTIFICATIONS.name)) {
                             continue;
                         }
                         if (permission.permissionGrantCode == PERMISSION_DENIED) {
@@ -106,10 +108,10 @@ public enum Permission {
     
 
             private boolean isNotSupportedPostNotification() {
-                return name.equals(PERMiSSION_POST_NOTIFICATIONS.name) && Build.VERSION.SDK_INT < ANDROID_TIRAMISU_SDK_VERSION;
+                return name.equals(PERMISSION_POST_NOTIFICATIONS.name) && Build.VERSION.SDK_INT < ANDROID_TIRAMISU_SDK_VERSION;
             }
 
-            private static final String TAG = "Permission"; 
+           
 
             private void logPermissionDenied() {
                 Log.i(TAG, String.format("[logPermissionDenied] %s 권한: %s",
