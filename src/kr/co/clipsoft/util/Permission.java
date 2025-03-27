@@ -53,12 +53,12 @@ public enum Permission {
 
             public static void initPermissionGrantCode(Context context) {
                 for (Permission permission : values()) {
-                    if (isNotSupportedPostNotification()) {
-                        permissionGrantCode = PERMISSION_GRANTED;
-                        logPermissionGrantCode();
+                    if (permission.isNotSupportedPostNotification()) {
+                        permission.permissionGrantCode = PERMISSION_GRANTED;
+                        permission.logPermissionGrantCode();
                     } else {
-                        permissionGrantCode = checkSelfPermission(context, name);
-                        logPermissionGrantCode();
+                        permission.permissionGrantCode = checkSelfPermission(context, permission.name);
+                        permission.logPermissionGrantCode();
                     }
                 }
             }
