@@ -23,6 +23,8 @@ import static android.Manifest.permission.CHANGE_WIFI_STATE;
 import static android.Manifest.permission.BROADCAST_STICKY;
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 
+import static android.support.v4.content.ContextCompat.checkSelfPermission;
+
 public enum Permission {
             PERMISSION_INTERNET(INTERNET,"기기 정보", PERMISSION_DENIED),
             PERMISSION_READ_EXTERNAL_STORAGE(READ_EXTERNAL_STORAGE,"저장공간", PERMISSION_DENIED),
@@ -53,7 +55,7 @@ public enum Permission {
                     if (isNotSupportedPostNotification()) {
                         permissionGrantCode = PERMISSION_GRANTED;
                     } else {
-                        permissionGrantCode = context.checkSelfPermission(name);
+                        permissionGrantCode = checkSelfPermission(context, name);
                     }
             }
 
