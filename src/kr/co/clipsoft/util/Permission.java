@@ -107,12 +107,12 @@ public enum Permission {
             }
 
             public static boolean isOnlyNotificationPermissionDenied() {
-               if(PERMISSION_POST_NOTIFICATIONS.permissionGrantCode == PERMISSION_DENIED) {
+               if(PERMISSION_POST_NOTIFICATIONS.isPermissionDenied()) {
                     for (Permission permission : values()) {
-                        if (permission.name.equals(PERMISSION_POST_NOTIFICATIONS.name)) {
+                        if (permission.isPermissionPostNotification()) {
                             continue;
                         }
-                        if (permission.permissionGrantCode == PERMISSION_DENIED) {
+                        if (permission.isPermissionDenied()) {
                             return false;
                         }
                     }
@@ -123,7 +123,15 @@ public enum Permission {
     
 
             private boolean isNotSupportedPostNotification() {
-                return name.equals(PERMISSION_POST_NOTIFICATIONS.name) && Build.VERSION.SDK_INT < ANDROID_TIRAMISU_SDK_VERSION;
+                return isPermissionPostNotification() && isSdkVersionUnderTiramisu();
+            }
+
+            private boolean isPermissionPostNotification() {
+                return name.equals(PERMISSION_POST_NOTIFICATIONS.name);
+            }
+
+            private boolean isSdkVersionUnderTiramisu() {
+                return Build.VERSION.SDK_INT < ANDROID_TIRAMISU_SDK_VERSION;
             }
 
             private void logPermissionStatus(String status) {
