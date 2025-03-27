@@ -50,7 +50,7 @@ public enum Permission {
                 this.permissionGrantCode = permissionGrantCode;
             }
 
-            protected void initPermissionGrantCode(Context context) {
+            public void initPermissionGrantCode(Context context) {
                     if (isNotSupportedPostNotification()) {
                         permissionGrantCode = PERMISSION_GRANTED;
                     } else {
@@ -58,15 +58,15 @@ public enum Permission {
                     }
             }
 
-            protected boolean isPermissionGranted() {
+            public boolean isPermissionGranted() {
                     return permissionGrantCode == PERMISSION_GRANTED;                
             }
 
-            protected boolean isPermissionDenied() {
+            public boolean isPermissionDenied() {
                 return permissionGrantCode == PERMISSION_DENIED;
             }
 
-            protected int getPermissionGrantCode() {
+            public int getPermissionGrantCode() {
                 return permissionGrantCode;
             }
 
@@ -74,12 +74,20 @@ public enum Permission {
                 boolean isAllGranted = true;
                 for (Permission permission : values()) {
                     if (permission.isPermissionDenied()) {
-                        permission.logPermissionDenied();
                         isAllGranted = false;
                     }
-                    permission.logPermissionGranted();
                 }
                 return isAllGranted;
+            }
+
+            public static void logAllPermissionStatus() {
+                for (Permission permission : values()) {
+                    if (permission.isPermissionDenied()) {
+                        permission.logPermissionDenied();
+                    } else {
+                        permission.logPermissionGranted();
+                    }
+                }
             }
 
             public static String[] getDeniedPermissions() {
@@ -112,19 +120,19 @@ public enum Permission {
                 return name.equals(PERMISSION_POST_NOTIFICATIONS.name) && Build.VERSION.SDK_INT < ANDROID_TIRAMISU_SDK_VERSION;
             }
 
-           
+            private void logPermissionStatus(String status) {
+                Log.i(getClass().getSimpleName(), 
+                      String.format("[logPermission%s] %s 권한: %s",
+                                   status,
+                                   displayName,
+                                   status));
+            }
 
             private void logPermissionDenied() {
-                Log.i(getClass().getSimpleName(), String.format("[logPermissionDenied] %s 권한: %s",
-                    displayName,
-                    "PERMISSION_DENIED"));
+                logPermissionStatus("DENIED");
             }
 
             private void logPermissionGranted() {
-                Log.i(getClass().getSimpleName(), String.format("[logPermissionGranted] %s 권한: %s",
-                    displayName,
-                    "PERMISSION_GRANTED"));
+                logPermissionStatus("GRANTED");
             }
-            
-            
 }
