@@ -51,7 +51,8 @@ public enum Permission {
                 this.permissionGrantCode = permissionGrantCode;
             }
 
-            public void initPermissionGrantCode(Context context) {
+            public static void initPermissionGrantCode(Context context) {
+                for (Permission permission : values()) {
                     if (isNotSupportedPostNotification()) {
                         permissionGrantCode = PERMISSION_GRANTED;
                         logPermissionGrantCode();
@@ -59,6 +60,7 @@ public enum Permission {
                         permissionGrantCode = checkSelfPermission(context, name);
                         logPermissionGrantCode();
                     }
+                }
             }
            
 

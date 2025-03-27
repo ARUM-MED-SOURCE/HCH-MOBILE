@@ -30,6 +30,7 @@ import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static kr.co.clipsoft.util.Permission.isOnlyNotificationPermissionDenied;
 import static kr.co.clipsoft.util.Permission.isPermissionAllGranted;
 import static kr.co.clipsoft.util.Permission.getDeniedPermissions;
+import static kr.co.clipsoft.util.Permission.initPermissionGrantCode;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static android.content.pm.PackageManager.PERMISSION_DENIED;
@@ -55,9 +56,7 @@ public class PermissionHelper {
 
 		this.context = context;
 		isShowingPermissionDialog = false;
-		for (Permission permission : Permission.values()) {
-			permission.initPermissionGrantCode(context);
-		}
+		initPermissionGrantCode(context);
 	}
 
 	public boolean hasAllPermissionsGranted(int[] grantResults) {
@@ -89,15 +88,7 @@ public class PermissionHelper {
 		showCustomPermissionsDialog();
 	}
 
-	public void showSystemPermissionsDialog() {
-		String[] deniedPermissions = getDeniedPermissions();
-
-		Log.i(TAG, String.format("[Permission Request] %s 권한 추가", Arrays.toString(deniedPermissions)));
-
-		if (hasDeniedPermissions(deniedPermissions)) {
-			ActivityCompat.requestPermissions((Activity) context, deniedPermissions, PERMISSION_REQUEST_CODE);
-		}
-	}
+	
 
 	// 권한 요청 커스텀 팝업
 	public void showCustomPermissionsDialog() {
@@ -158,6 +149,16 @@ public class PermissionHelper {
 			return NOTIFICATION_PERMISSION_MESSAGE;
 		}
 		return BASIC_PERMISSION_MESSAGE;
+	}
+
+	private void showSystemPermissionsDialog() {
+		String[] deniedPermissions = getDeniedPermissions();
+
+		Log.i(TAG, String.format("[Permission Request] %s 권한 추가", Arrays.toString(deniedPermissions)));
+
+		if (hasDeniedPermissions(deniedPermissions)) {
+			ActivityCompat.requestPermissions((Activity) context, deniedPermissions, PERMISSION_REQUEST_CODE);
+		}
 	}
 
 	private boolean hasDeniedPermissions(String[] deniedPermissions) {
