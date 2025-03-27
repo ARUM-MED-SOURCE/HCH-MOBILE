@@ -45,6 +45,7 @@ import kr.co.clipsoft.util.PermissionHelper;
 import kr.co.clipsoft.util.Storage;
 import java.util.Set;
 
+import static kr.co.clipsoft.util.Permission.isPermissionAllGranted;
 
 
 public class MainActivity extends CordovaActivity
@@ -53,11 +54,13 @@ public class MainActivity extends CordovaActivity
 	private Context context;
 	public static final boolean SUPPORT_STRICT_MODE = Build.VERSION_CODES.FROYO < Build.VERSION.SDK_INT;
 	private static final int PERMISSION_REQUEST_CODE = 0;
+	private static PermissionHelper permissionHelper;
 	private static ProgressDialog loadingBar = null;
 	private static boolean activityVisible;
 	private static boolean isStart = false;
 	private static Handler rateHandler; 
-	private static PermissionHelper permissionHelper;
+	
+	
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -117,7 +120,7 @@ public class MainActivity extends CordovaActivity
 		// 백그라운드 작업 수행중인 스레드 종료
 		Intent foreIntent = new Intent(this, MyForegroundService.class);
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//			startForegroundService(foreIntent);	
+			startForegroundService(foreIntent);	
 		}else {
 			startService(foreIntent);
 		}
@@ -153,7 +156,7 @@ public class MainActivity extends CordovaActivity
         Log.i(TAG,"preferences 저장 정보 삭제");  		
   		
   		// 저장소 권한이 없을 경우 파일을 삭제할 수 없음
-  		if(permissionHelper.currentAllPermisionCheck()){
+  		if(isPermissionAllGranted()){
   			CommonUtil.getInstance(this).deleteEFormdataFile();	// e-from 관련 파일 삭제 		
 		}  		
   		isStart = false;
@@ -212,7 +215,7 @@ public class MainActivity extends CordovaActivity
 				activityStart();
 			} 
 		}else{
-			if(permissionHelper.currentAllPermisionCheck()){
+			if(isPermissionAllGranted()){
 				if(!isStart){
 					activityStart();
 				}
