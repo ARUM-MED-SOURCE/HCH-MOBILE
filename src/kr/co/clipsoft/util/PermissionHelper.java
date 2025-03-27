@@ -142,11 +142,15 @@ public class PermissionHelper {
 		isShowingPermissionDialog = false;
 		dialog.cancel();
 		
-		if (isOnlyNotificationPermissionDenied()) {    
+		moveToAppropriateSettings();
+	}
+
+	private void moveToAppropriateSettings() {
+		if (isOnlyNotificationPermissionDenied()) {
 			moveNotificationSetting();
-		} else {
-			moveSetting();
+			return;
 		}
+		moveSetting();
 	}
 
 	private String getPermissionMessage() {
@@ -174,8 +178,13 @@ public class PermissionHelper {
 	 * 해당 함수를 탄다는 건 안드로이드 13이상이라는 것
 	 */
 	private void moveNotificationSetting() {
-		Intent intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
-		intent.putExtra(Settings.EXTRA_APP_PACKAGE, context.getPackageName());
-		((Activity) context).startActivity(intent);
+		try {
+			Intent intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+			intent.putExtra(Settings.EXTRA_APP_PACKAGE, context.getPackageName());
+			((Activity) context).startActivity(intent);
+		} catch (Exception e) {
+			Log.e(TAG, "알림 설정 화면 이동 실패, 기본 설정 화면으로 이동", e);
+			moveSetting();
+		}
 	}
 }
