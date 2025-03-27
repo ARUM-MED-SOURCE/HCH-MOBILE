@@ -53,10 +53,13 @@ public enum Permission {
             public void initPermissionGrantCode(Context context) {
                     if (isNotSupportedPostNotification()) {
                         permissionGrantCode = PERMISSION_GRANTED;
+                        logPermissionGrantCode();
                     } else {
                         permissionGrantCode = checkSelfPermission(context, name);
+                        logPermissionGrantCode();
                     }
             }
+           
 
             public boolean isPermissionGranted() {
                     return permissionGrantCode == PERMISSION_GRANTED;                
@@ -134,5 +137,9 @@ public enum Permission {
 
             private void logPermissionGranted() {
                 logPermissionStatus("GRANTED");
+            }
+
+            private void logPermissionGrantCode() {
+                Log.i(getClass().getSimpleName(), String.format("[logPermissionGrantCode] %s 권한: %s", displayName, permissionGrantCode));
             }
 }

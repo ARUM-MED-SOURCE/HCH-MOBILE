@@ -157,7 +157,7 @@ public class PermissionHelper {
 	}
 
 	private boolean hasDeniedPermissions(String[] deniedPermissions) {
-		return !(deniedPermissions.length <= 0);
+		return deniedPermissions.length > 0;
 	}
 
 	// 설정화면으로 이동
