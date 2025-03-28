@@ -40,10 +40,8 @@ import android.util.Log;
 import android.webkit.WebView;
 import android.widget.Toast;
 import kr.co.clipsoft.util.CommonUtil;
-import kr.co.clipsoft.util.EFromViewer;
 import kr.co.clipsoft.util.PermissionHelper;
 import kr.co.clipsoft.util.Storage;
-import java.util.Set;
 
 import static kr.co.clipsoft.util.Permission.isPermissionAllGranted;
 
@@ -78,17 +76,6 @@ public class MainActivity extends CordovaActivity
 		    	WebView.setWebContentsDebuggingEnabled(true); 
 	    	}
 		}
-
-		// hsb :: 2025.03.24
-		// 백그라운드 작업 수행중인 스레드 종료
-		Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-		for (Thread thread : threadSet) {
-			if (thread.getName().equals(MyForegroundService.CUSTOM_THREAD_NAME) && thread.isAlive()) {
-				EFromViewer.writeLog("MainActivity :: onCreate() :: 스레드 종료 요청_tname_" + thread.getName());
-				thread.interrupt();
-			}
-		}
-
     }
     
     @Override

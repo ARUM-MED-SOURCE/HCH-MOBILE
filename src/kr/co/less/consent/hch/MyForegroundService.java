@@ -10,6 +10,12 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import kr.co.clipsoft.util.EFromViewer;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.Executors;
 
 /**
  * 포어그라운드 서비스 관련 클래스 - 앱 상태가 백그라운드로 전환시, 포어그라운드 알림 표시 - 동의서 앱이 백그라운드 전환시, 안드로이드
@@ -27,8 +33,11 @@ public class MyForegroundService extends Service {
 
 	// about thread
 	final static String CUSTOM_THREAD_NAME = "MyCustomThread";
-	Thread thread;
-	int count = 0;
+	
+	private ScheduledExecutorService executorService;
+	private final AtomicInteger count = new AtomicInteger(0);
+	private volatile boolean isServiceRunning = false;
+	
 
 	// about log
 	final String LOG_TAG = "MyForegroundService";
@@ -46,37 +55,7 @@ public class MyForegroundService extends Service {
 
 		Log.d(LOG_TAG, "서비스(백그라운드) 인스턴스 생성");
 
-		// init thread
-		thread = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				Log.d(LOG_TAG, "서비스-스레드 run start");
-				while (true) {
-					Log.e("Service", "서비스가 실행 중입니다...");
-					Log.e("Service", "" + count);
-					try {
-						// 백그라운드 작업 및 포어그라운드 알림 업데이트
-						Thread.sleep(2000);
-						count = count >= Integer.MAX_VALUE ? 0 : count + 2;
-						updateNotification(count);
-					}
-					// 스레드 중단 요청시 발생하는 예외
-					catch (InterruptedException e) {
-						Log.d(LOG_TAG, "서비스-스레드 인스턴스 발생 및 중단");
-						break;
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}, CUSTOM_THREAD_NAME);
-
-		// init notification chanel(android_api >= 26)
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			notificationChannel = new NotificationChannel(CHANNEL_ID, "Foreground Service Channel",
-					NotificationManager.IMPORTANCE_LOW);
-			getSystemService(NotificationManager.class).createNotificationChannel(notificationChannel);
-		}
+		initNotificationChannel();
 	}
 	
 	@Override
@@ -85,9 +64,9 @@ public class MyForegroundService extends Service {
     	Notification notification = createNotification(0);
         
         startForeground(FOREGROUND_NOTI_ID, notification);
-        this.thread.start();
+        startBackgroundTask();
 
-        return super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
     }
     
     @Override
@@ -95,9 +74,66 @@ public class MyForegroundService extends Service {
     	// TODO Auto-generated method stub
     	super.onDestroy();
     	
-    	this.thread.interrupt();	// 서비스 인스턴스가 종료되면 스레드(백그라운드작업) 중단
+    	cleanupResources();
     	Log.d(LOG_TAG, "서비스(백그라운드) 인스턴스 소멸");
     }
+
+	private void startBackgroundTask() {
+		executorService = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
+			@Override
+			public Thread newThread(Runnable r) {
+				Thread thread = new Thread(r);
+				thread.setName(CUSTOM_THREAD_NAME);
+				thread.setDaemon(true);
+				return thread;
+			}
+		});
+		
+		isServiceRunning = true;
+		executorService.scheduleAtFixedRate(new Runnable() {
+			@Override
+			public void run() {
+				if (!isServiceRunning) {
+					return;
+				}
+			
+			Log.e("Service", "서비스가 실행 중입니다...");
+			int currentCount = count.get();
+			Log.e("Service", "현재 카운트: " + currentCount);
+
+				int newCount = currentCount >= Integer.MAX_VALUE ? 0 : currentCount + 2;
+				updateNotification(newCount);
+				count.set(newCount);
+			}
+		}, 0, 2, TimeUnit.SECONDS);
+	}
+
+	private void cleanupResources() {
+		isServiceRunning = false;
+		
+		if (executorService != null && !executorService.isShutdown()) {
+			try {
+				executorService.shutdown();
+				if (!executorService.awaitTermination(5, TimeUnit.SECONDS)) {
+					executorService.shutdownNow();
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+				executorService.shutdownNow();
+			}
+		}
+	}
+
+	private void initNotificationChannel() {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			notificationChannel = new NotificationChannel(CHANNEL_ID, "Foreground Service Channel",
+					NotificationManager.IMPORTANCE_LOW);
+			NotificationManager notificationManager = getSystemService(NotificationManager.class);
+			if (notificationManager != null) {
+				notificationManager.createNotificationChannel(notificationChannel);
+			}
+		}
+	}
     
     /**
      *  hajun :: 2024.12.30
@@ -107,31 +143,22 @@ public class MyForegroundService extends Service {
      */
     private Notification createNotification(int time) {
     	
-    	Notification notification;
-    	
     	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) { // 오레오(API 26) 이상일 때           
-            Notification.Builder notification_builder = new Notification.Builder(this, CHANNEL_ID)
+            return new Notification.Builder(this, CHANNEL_ID)
                     .setContentText(String.format("서비스가 실행중입니다.(%ds)", time))
                     .setContentTitle("전자동의서 서비스")
                     .setSmallIcon(android.R.drawable.ic_menu_info_details)
-            		.setOngoing(true);
-
-            
-            
-            notification = notification_builder.build();
-        }
-    	else { // 오레오 미만 버전에서는 NotificationCompat 사용
-            NotificationCompat.Builder notification_builder = new NotificationCompat.Builder(this)
+            		.setOngoing(true)
+					.build();
+        } else { // 오레오 미만 버전에서는 NotificationCompat 사용
+            return new NotificationCompat.Builder(this)
                     .setContentText(String.format("서비스가 실행중입니다.(%ds)", time))
                     .setContentTitle("전자동의서 서비스")
                     .setSmallIcon(android.R.drawable.ic_menu_info_details)
                     .setOngoing(true)
-                    .setPriority(NotificationCompat.PRIORITY_LOW);
-
-            notification = notification_builder.build();
+                    .setPriority(NotificationCompat.PRIORITY_LOW)
+                    .build();
         }
-    	
-    	return notification;
     }
     
     /**
@@ -139,13 +166,13 @@ public class MyForegroundService extends Service {
      *  알림 업데이트 메소드
      * @param time: 백그라운드 전환 후 경과 시간
      */
-    private void updateNotification(int time) {
-    	
-    	Notification notification = createNotification(time);  	
-    	
+    private void updateNotification(int time) {	
     	NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         if (notificationManager != null) {
-            notificationManager.notify(FOREGROUND_NOTI_ID, notification); // 동일한 ID로 알림 갱신
+            notificationManager.notify(
+				FOREGROUND_NOTI_ID, 
+				createNotification(time)
+				); // 동일한 ID로 알림 갱신
         }
     }
 }
