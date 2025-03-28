@@ -16,6 +16,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.Executors;
+import static java.util.concurrent.TimeUnit.SECONDS;
+
 
 /**
  * 포어그라운드 서비스 관련 클래스 - 앱 상태가 백그라운드로 전환시, 포어그라운드 알림 표시 - 동의서 앱이 백그라운드 전환시, 안드로이드
@@ -105,7 +107,7 @@ public class MyForegroundService extends Service {
 				updateNotification(newCount);
 				count.set(newCount);
 			}
-		}, 0, 2, TimeUnit.SECONDS);
+		}, 0, 2, SECONDS);
 	}
 
 	private void cleanupResources() {
@@ -114,12 +116,14 @@ public class MyForegroundService extends Service {
 		if (executorService != null && !executorService.isShutdown()) {
 			try {
 				executorService.shutdown();
-				if (!executorService.awaitTermination(5, TimeUnit.SECONDS)) {
+				if (!executorService.awaitTermination(5, SECONDS)) {
 					executorService.shutdownNow();
 				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 				executorService.shutdownNow();
+			} finally {
+				executorService = null;
 			}
 		}
 	}
