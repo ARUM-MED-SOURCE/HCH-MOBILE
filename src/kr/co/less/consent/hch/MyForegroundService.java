@@ -103,11 +103,11 @@ public class MyForegroundService extends Service {
 			int currentCount = count.get();
 			Log.e("Service", "현재 카운트: " + currentCount);
 
-				int newCount = currentCount >= Integer.MAX_VALUE ? 0 : currentCount + 2;
+				int newCount = currentCount >= Integer.MAX_VALUE ? 0 : currentCount + 1;
 				updateNotification(newCount);
 				count.set(newCount);
 			}
-		}, 0, 2, SECONDS);
+		}, 0, 1, SECONDS);
 	}
 
 	private void cleanupResources() {

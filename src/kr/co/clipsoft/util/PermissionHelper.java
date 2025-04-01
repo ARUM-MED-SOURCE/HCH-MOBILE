@@ -59,17 +59,6 @@ public class PermissionHelper {
 		initPermissionGrantCode(context);
 	}
 
-	public boolean hasAllPermissionsGranted(int[] grantResults) {
-		boolean result = true;
-		for (int grantResult : grantResults) {
-			if (grantResult == PERMISSION_DENIED) {
-				result = false;
-			}
-		}
-		Log.i(TAG, "[hasAllPermissionsGranted ] 모든 권한 확인 : " + result);
-		return result;
-	}
-
 	//  권한 요청 관련 메소드
 	public void showRequestPermissionsDialog() {
 		String isUsed = CommonUtil.getInstance(context).getSharedPreferences("PERMISSION", "IS_USED", "FALSE");
