@@ -215,7 +215,7 @@ public class MainActivity extends CordovaActivity
 	@Override
 	public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
 		Log.i(TAG, "[PermissionsResult] requestCode :" + requestCode);
-		if (requestCode == PERMISSION_REQUEST_CODE && permissionHelper.hasAllPermissionsGranted(grantResults)) {
+		if (requestCode == PERMISSION_REQUEST_CODE && isPermissionAllGranted()) {
 			activityStart();
 		}else{ 
 	    	String asdf = Environment.getExternalStorageDirectory().toString();
