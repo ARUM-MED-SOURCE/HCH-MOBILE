@@ -28,6 +28,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.Vector;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 
@@ -131,6 +134,19 @@ public class EFromViewer {
 		MODE = Storage.getInstance(context).getStorage("mode");
 		SERVICE_URL = Storage.getInstance(context).getStorage("serviceUrl");// + "/ConsentSvc.aspx" ;
 		Log.i("EFromViewer", "[EFORM_URL ]: " + EFORM_URL);
+		// 백그라운드에서 파일 제거 로직 수행
+		
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				// by sangu02 2024/07/04 기존 로직 수정, 뷰어 열릴때만 로그파일 날짜 확인 후 삭제
+				// 로그 파일 디렉토리 설정
+				File logDir = new File(Environment.getExternalStorageDirectory()+"/arum_log");
+
+				// 디렉토리 내의 오래된 로그 파일 삭제
+				deleteOldLogs(logDir, 3); // 2주(14일) 이전의 로그 파일 삭제
+			}
+		}).run();
 	}
 
 	/**
@@ -159,6 +175,74 @@ public class EFromViewer {
 		}
 	}
 
+	/**
+	 * @author sangU02
+	 * @since 2024/06/10
+	 * @param 내부저장소
+	 *            경로, 삭제 설정 일수
+	 */
+	private static void deleteOldLogs(File dir, int days) {
+		if (!dir.exists() || !dir.isDirectory()) {
+			return;
+		}
+
+		// 현재 시간
+		long currentTime = System.currentTimeMillis();
+
+		// 디렉토리 내의 파일들을 검사
+		for (File file : dir.listFiles()) {
+			// 파일 이름이 "timer_log_"로 시작하는지 확인
+			if (file.getName().startsWith("timer_log_")) { // 업무앱 로그
+				writeLog("업무앱 로그 삭제");
+				// 파일의 마지막 수정 시간이 기준일보다 이전인지 확인
+				long diff = currentTime - file.lastModified();
+				if (TimeUnit.MILLISECONDS.toDays(diff) > days) {
+					// 파일 삭제
+					if (!file.delete()) {
+						writeLog("Failed to delete log file: " + file.getName());
+					}
+				}
+			}else if (file.getName().startsWith("logcat_")) {
+				writeLog("로그캣  로그 삭제");
+				long diff = currentTime - file.lastModified();
+				if (TimeUnit.MILLISECONDS.toDays(diff) > days) {
+					// 파일 삭제
+					if (!file.delete()) {
+						writeLog("Failed to delete log file: " + file.getName());
+					}
+				}
+			}else if (file.getName().startsWith("BackUP_Viewer_Log_")) {
+				writeLog("BackUP_Viewer_log 삭제");
+	            // 파일 이름에서 yyyy-MM-dd 패턴을 추출
+	            String fileName = file.getName();
+	            Pattern pattern = Pattern.compile("BackUP_Viewer_Log_(\\d{4}-\\d{2}-\\d{2})");
+	            Matcher matcher = pattern.matcher(fileName);
+	            
+	            if (matcher.find()) {
+	                // 추출한 날짜 문자열
+	                String dateString = matcher.group(1);
+	                
+	                try {
+	                    // 날짜 형식 지정 (yyyy-MM-dd)
+	                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	                    Date fileDate = dateFormat.parse(dateString);
+	                    long fileTime = fileDate.getTime();
+	                    
+	                    // 파일의 날짜와 현재 시간 비교
+	                    long diff = currentTime - fileTime;
+	                    if (TimeUnit.MILLISECONDS.toDays(diff) > days) {
+	                        if (!file.delete()) {
+	                            System.err.println("Failed to delete log file: " + file.getName());
+	                        }
+	                    }
+	                } catch (ParseException e) {
+	                    writeLog("Failed to parse date: " + dateString);
+	                }
+	            }
+	        }
+		}
+	}
+	
 	// e-from toolkit 초기화
 	@SuppressWarnings("incomplete-switch")
 	public void initializeToolkit(JSONObject eFromViewerOption) throws JSONException {

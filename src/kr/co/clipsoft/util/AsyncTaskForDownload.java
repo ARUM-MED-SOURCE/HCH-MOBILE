@@ -85,18 +85,7 @@ public class AsyncTaskForDownload extends AsyncTask<String, String, String> {
 			// android 누가 버전부터 파일공유시에 FileProvider를 사용해야함.
 
 			String authorities = context.getPackageName() + ".fileprovider";
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
-				Log.i(TAG, "[UPDATE] USE FileProvider : " + authorities);
-				Log.i(TAG, "[UPDATE] downloadPath : " + downloadPath);
-				Log.i(TAG, "[UPDATE] apkFileName : " + apkFileName);
-				Log.i(TAG, "[UPDATE] apkFileName : " + Fullpath);
-				// apkPath = FileProvider.getUriForFile(context, authorities, new
-				// File(downloadPath, apkFileName));
-			} else {
-				Log.i(TAG, "[UPDATE] NOT USE FileProvider : " + downloadPath + File.separator + apkFileName);
-				// apkPath = Uri.fromFile(new File(downloadPath+File.separator+apkFileName));
-			}
 			apkPath = FileProvider.getUriForFile(context, authorities, new File(downloadPath, apkFileName));
 			Intent i = new Intent();
 			i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
