@@ -197,19 +197,18 @@ public class MainActivity extends CordovaActivity
 		Log.i(TAG, "[verificationPermission] Android Version : " + CommonUtil.getInstance(context).getAndroidVersion());
 		// 안드로이드 마시멜로우 버전(23)부터는 중요 권한을 사용자에게 부여받아야만 한다. 
 		setBatteryOptimizations();
-		if (CommonUtil.getInstance(context).getAndroidVersion() < 23) {
-			if(!isStart){
-				activityStart();
-			} 
-		}else{
-			if(isPermissionAllGranted()){
-				if(!isStart){
-					activityStart();
-				}
-			}else{		
-				permissionHelper.showRequestPermissionsDialog();	
-			}
-		}
+		
+		if (isStart) {
+        return;
+    }
+
+    	boolean isLegacyAndroid = CommonUtil.getInstance(context).getAndroidVersion() < 23;
+    	if (isLegacyAndroid || isPermissionAllGranted()) {
+        	activityStart();
+        	return;
+    	}
+
+    	permissionHelper.showRequestPermissionsDialog();
 	};
 
 	@Override
