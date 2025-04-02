@@ -59,26 +59,10 @@ public class PermissionHelper {
 		initPermissionGrantCode(context);
 	}
 
-	//  권한 요청 관련 메소드
-	public void showRequestPermissionsDialog() {
-		String isUsed = CommonUtil.getInstance(context).getSharedPreferences("PERMISSION", "IS_USED", "FALSE");
-		Log.i(TAG, "[isUsedSystemPermissionsDialog] 시스템 권한 다이얼로그 사용 여부 : " + isUsed);
-		
-		if (isUsed.equals("FALSE")) {
-			CommonUtil.getInstance(context).setSharedPreferences("PERMISSION", "IS_USED", "TRUE");
-			showSystemPermissionsDialog();
-			return;
-		}
-
-		if (isPermissionAllGranted() || isShowingPermissionDialog) {
-			return;
-		}
-
-		showCustomPermissionsDialog();
+	public boolean isShowingPermissionDialog() {
+		return isShowingPermissionDialog;
 	}
-
 	
-
 	// 권한 요청 커스텀 팝업
 	public void showCustomPermissionsDialog() {
 		Log.i(TAG, "[showCustomPermissionDialog]");
@@ -140,20 +124,6 @@ public class PermissionHelper {
 		return BASIC_PERMISSION_MESSAGE;
 	}
 
-	private void showSystemPermissionsDialog() {
-		String[] deniedPermissions = getDeniedPermissions();
-
-		Log.i(TAG, String.format("[Permission Request] %s 권한 추가", Arrays.toString(deniedPermissions)));
-
-		if (hasDeniedPermissions(deniedPermissions)) {
-			ActivityCompat.requestPermissions((Activity) context, deniedPermissions, PERMISSION_REQUEST_CODE);
-		}
-	}
-
-	private boolean hasDeniedPermissions(String[] deniedPermissions) {
-		return deniedPermissions.length > 0;
-	}
-
 	// 설정화면으로 이동
 	private void moveSetting() {
 		Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
@@ -162,8 +132,6 @@ public class PermissionHelper {
 	}
 
 	/**
-	 * by sangu02
-	 * 2024/10/23
 	 * 알림 설정 화면으로 이동하게 되어있음
 	 * 해당 함수를 탄다는 건 안드로이드 13이상이라는 것
 	 */

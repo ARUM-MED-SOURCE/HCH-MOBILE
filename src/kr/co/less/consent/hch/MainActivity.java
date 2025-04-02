@@ -44,6 +44,7 @@ import kr.co.clipsoft.util.PermissionHelper;
 import kr.co.clipsoft.util.Storage;
 
 import static kr.co.clipsoft.util.Permission.isPermissionAllGranted;
+import static kr.co.clipsoft.util.Permission.getDeniedPermissions;
 
 
 public class MainActivity extends CordovaActivity
@@ -197,19 +198,30 @@ public class MainActivity extends CordovaActivity
 		Log.i(TAG, "[verificationPermission] Android Version : " + CommonUtil.getInstance(context).getAndroidVersion());
 		// 안드로이드 마시멜로우 버전(23)부터는 중요 권한을 사용자에게 부여받아야만 한다. 
 		setBatteryOptimizations();
-		if (CommonUtil.getInstance(context).getAndroidVersion() < 23) {
-			if(!isStart){
-				activityStart();
-			} 
-		}else{
-			if(isPermissionAllGranted()){
-				if(!isStart){
-					activityStart();
-				}
-			}else{		
-				permissionHelper.showRequestPermissionsDialog();	
-			}
+
+		if (isStart) {
+        return;
+    	}
+
+    	boolean isLegacyAndroid = CommonUtil.getInstance(context).getAndroidVersion() < 23;
+    	if (isLegacyAndroid || isPermissionAllGranted()) {
+        	activityStart();
+        	return;
+    	}
+
+		String isUsed = CommonUtil.getInstance(context).getSharedPreferences("PERMISSION", "IS_USED", "FALSE");
+		Log.i(TAG, "[isUsedSystemPermissionsDialog] 시스템 권한 다이얼로그 사용 여부 : " + isUsed);
+		if (isUsed.equals("FALSE")) {
+			CommonUtil.getInstance(context).setSharedPreferences("PERMISSION", "IS_USED", "TRUE");
+			requestPermissions(getDeniedPermissions(), PERMISSION_REQUEST_CODE);
+			return;
 		}
+
+		if(permissionHelper.isShowingPermissionDialog()){
+			return;
+		}
+		
+    	permissionHelper.showCustomPermissionsDialog();
 	};
 
 	@Override
