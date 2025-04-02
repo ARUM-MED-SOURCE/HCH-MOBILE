@@ -17,8 +17,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
 import android.util.Log;
-import kr.co.clipsoft.less.consent.demo.R;
-
+import kr.co.less.consent.hch.R;
 public class Storage {
 	public static final String TAG = "Storage";
 	 

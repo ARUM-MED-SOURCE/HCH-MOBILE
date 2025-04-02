@@ -117,7 +117,7 @@ public class MainActivity extends CordovaActivity
 		// 백그라운드 작업 수행중인 스레드 종료
 		Intent foreIntent = new Intent(this, MyForegroundService.class);
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//			startForegroundService(foreIntent);	
+			startForegroundService(foreIntent);	
 		}else {
 			startService(foreIntent);
 		}
