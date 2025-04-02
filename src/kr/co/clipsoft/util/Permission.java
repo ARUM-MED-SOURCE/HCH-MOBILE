@@ -77,13 +77,12 @@ public enum Permission {
             }
 
             public static boolean isPermissionAllGranted() {
-                boolean isAllGranted = true;
                 for (Permission permission : values()) {
                     if (permission.isPermissionDenied()) {
-                        isAllGranted = false;
+                        return false;
                     }
                 }
-                return isAllGranted;
+                return true;
             }
 
             public static void logAllPermissionStatus() {

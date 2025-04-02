@@ -201,7 +201,7 @@ public class MainActivity extends CordovaActivity
 
 		if (isStart) {
         return;
-    	}
+    	}	
 
     	boolean isLegacyAndroid = CommonUtil.getInstance(context).getAndroidVersion() < 23;
     	if (isLegacyAndroid || isPermissionAllGranted()) {
